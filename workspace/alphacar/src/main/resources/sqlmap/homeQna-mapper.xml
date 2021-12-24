@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="homeQna.mapper">
+
+	<!-- 답글저장 -->
+	<insert id="homeQnaReply">
+			declare
+  			QNA_PW varchar2(20) ;
+			begin
+					update web_qna set qna_step = qna_step + 1 
+					where qna_root = #{qna_root} and qna_step > #{qna_step};
+					select qna_password into QNA_PW from web_qna 
+					where qna_id = #{qna_id};
+
+					insert into web_qna (qna_id, customer_email, qna_title,
+				qna_content, qna_root, qna_step, qna_indent, qna_password)
+					values ( seq_web_qna.nextval, #{customer_email}, #{qna_title}, #{qna_content}
+				, #{qna_root}, #{qna_step}+1, #{qna_indent}+1, QNA_PW);
+			end;
+	
+		</insert>
+		
+		<!-- qna 답글 내용 수정 -->
+	<update id="homeQnaReplyUpdate">
+		update web_qna set qna_title = #{qna_title}, qna_content = #{qna_content}
+		where qna_id = #{qna_id}
+	</update>
+		
+		<!-- qna 글 목록 조회 -->	
+		<select id="homeQnaList" resultType="homeQna.QnaVO">
+			select *
+			from (select rownum no, w.*, ( select customer_name from customer c where c.customer_email = w.customer_email ) customer_name 
+					from ( select * 
+						   from web_qna
+						   <include refid="where_search" /> 
+						   order by qna_root, qna_step desc ) w
+				  order by no desc)
+			where no between #{beginList} and #{endList}
+		</select>
+		
+		<sql id = 'where_search'>
+		<if test='search == "user-info" '>
+			where qna_ATTRIBUTE = 'C' 
+			<if test="keyword != null">
+	  				and qna_title like '%'||#{keyword}||'%'
+	  		</if>
+		</if>
+		<if test='search == "store" '>
+			where qna_ATTRIBUTE = 'S' 
+			<if test="keyword != null">
+	  				and qna_title like '%'||#{keyword}||'%'
+	  			</if>
+		</if>
+	
+		<if test='search == "app_web" '>
+			where qna_ATTRIBUTE = 'M' 
+			<if test="keyword != null">
+	  				and qna_title like '%'||#{keyword}||'%'
+	  			</if>
+		</if>
+		<if test='search == "alphacar" '>
+			where qna_ATTRIBUTE = 'A' 
+			<if test="keyword != null">
+	  				and qna_title like '%'||#{keyword}||'%'
+	  			</if>
+		</if>
+		<if test='search == "all" '>
+			
+	  			<if test="keyword != null">
+	  				where qna_title like '%'||#{keyword}||'%'
+	  			</if>
+		</if>
+	</sql>
+	
+	<!-- qna 글 자세히보기 -->
+	<select id="homeQnaDetail" resultType="homeQna.QnaVO">
+		select * 
+		from (select w.*, c.customer_name 
+			  from web_qna w, customer c
+			  where w.customer_email = c.customer_email)
+		where qna_id = #{qna_id}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="homeQnaRead">
+		update web_qna
+		set qna_readcnt = qna_readcnt +1
+		where qna_id = #{qna_id}	
+	</update>
+		
+	
+	<!-- 전체 qna 수 조회 -->
+	<select id="hometotalList" resultType="integer">
+		select count(*) from web_qna <include refid="where_search" />
+	</select>
+	
+	<!-- qna 신규 글 등록 -->
+	<insert id="homeInsert">
+		insert into web_qna (qna_id, customer_email, qna_title,
+			qna_content, qna_filename, qna_filepath, qna_root, qna_attribute, qna_password)
+		values ( seq_web_qna.nextval, #{customer_email}, #{qna_title}, #{qna_content}
+			, #{qna_filename, jdbcType=VARCHAR }, #{qna_filepath, jdbcType=VARCHAR }, seq_web_qna.currval,
+			#{qna_attribute}, #{qna_password})
+	</insert>
+	
+	<!-- qna 게시글 내용 수정 -->
+	<update id="homeQnaUpdate">
+		update web_qna set qna_title = #{qna_title}, qna_content = #{qna_content}, 
+		qna_attribute = #{qna_attribute}, qna_password = #{qna_password}
+		where qna_id = #{qna_id}
+	</update>
+	
+	<!-- qna 글 삭제 -->
+	<delete id="homeQnaDelete">
+		delete web_qna
+		where qna_id = #{qna_id}
+	</delete>
+	
+	<!-- qna 비밀번호 확인 -->
+	<select id="homeQnaCheck" resultType="homeQna.QnaVO">
+		select * from web_qna
+		where qna_id = #{qna_id}
+		
+	</select>
+	
+	<sql id = 'where_member'>
+		<if test='search == "user-info" '>
+			and qna_ATTRIBUTE = 'C' 
+			<if test="keyword != null">
+	  				and qna_title like '%'||#{keyword}||'%'
+	  	</if>
+		</if>
+		<if test='search == "store" '>
+			and qna_ATTRIBUTE = 'S' 
+			<if test="keyword != null">
+	  				and qna_title like '%'||#{keyword}||'%'
+	  		</if>
+		</if>
+	
+		<if test='search == "app_web" '>
+			and qna_ATTRIBUTE = 'M' 
+			<if test="keyword != null">
+	  				and qna_title like '%'||#{keyword}||'%'
+	  		</if>
+		</if>
+		<if test='search == "alphacar" '>
+			and qna_ATTRIBUTE = 'A' 
+			<if test="keyword != null">
+	  				and qna_title like '%'||#{keyword}||'%'
+	  		</if>
+		</if>
+		<if test='search == "all" '>
+			
+	  			<if test="keyword != null">
+	  				and qna_title like '%'||#{keyword}||'%'
+	  			</if>
+		</if>
+	</sql>
+
+	<!-- 고객과 점주일 경우 qna 수 조회 -->
+	<select id="homeMembertotalList" resultType="integer">
+		select count(*) from web_qna 
+		where customer_email = #{customer_email}
+		<include refid="where_member" />
+	</select>
+	
+   <!-- 고객과 점주일 경우 페이징 처리 된 qna 글 목록 조회 -->   
+   <select id="homeMemberQnaList" resultType="homeQna.QnaVO">
+      select *
+      from (select rownum no, w.*, ( select customer_name from customer c where c.customer_email = w.customer_email ) customer_name 
+            from ( select * 
+                  from web_qna
+                  
+                  where customer_email = #{customer_email} <include refid="where_member" />
+                  order by qna_root, qna_step desc ) w
+           order by no desc)
+      where no between #{page.beginList} and #{page.endList}
+      
+   </select>
+
+	
+</mapper>

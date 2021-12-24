@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="favorite.mapper">
+
+	<!-- 즐겨찾기 페이지 -->
+	<select id="favorite" resultType="favorite.FavoriteCustomerVO">
+		select f.fav_number , s.store_number ,s.store_name , c.customer_email , t.imgpath
+		from favorite f left outer join store s on f.store_number = s.store_number
+                left outer join customer c on f.customer_email = c.customer_email 
+                left outer join store_file t on s.store_number = t.store_number  
+         where c.customer_email = #{customer_email}   
+         and t.rank = 1 
+	</select> 
+	
+	<!-- 즐겨찾기 목록 지우기 -->
+	<delete id="delete">
+		delete from favorite
+		where fav_number = #{fav_number}
+		
+	</delete>
+	
+	<select id="check" resultType="Integer">
+		select count(*) from favorite where customer_email = #{customer_email} and store_number = #{store_number}
+	</select>
+
+
+<insert id="favorite_insert" >
+insert into favorite values (seq_favorite.nextval, #{customer_email, jdbcType=VARCHAR}, #{store_number})
+</insert>
+
+<update id="update">
+update store set store_favorite_cnt = (select count(*) from favorite where store_number = #{store_number}) where store_number = #{store_number}
+</update>
+
+</mapper>

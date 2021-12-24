@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="review.mapper">
+
+	<!-- 업체에 달린 리뷰 -->
+	<select id="list" resultType="review.ReviewVO">
+		select * from review where
+		store_number = #{store_number,
+		jdbcType=VARCHAR}
+	</select>
+
+	<!-- 리뷰 등록 -->
+	<insert id="insert">
+		insert into review(review_id, customer_email,
+		store_number, review_title, review_content, review_score,
+		review_filename, review_filepath)
+		values(seq_review.nextval,
+		#{customer_email}, #{store_number}, #{review_title}, #{review_content},
+		#{review_score}
+		, #{review_filename, jdbcType=VARCHAR}, #{review_filepath,
+		jdbcType=VARCHAR})
+
+	</insert>
+	<!-- 리뷰 상세 정보 -->
+	<select id="detail" resultType="review.ReviewVO">
+		select customer_email, (select
+		customer_picture from customer c where
+		r.customer_email = c.customer_email) customer_picture, review_title,
+		review_content, review_score, review_filename, review_filepath
+		from review r
+		where
+		review_id=#{review_id, jdbcType=VARCHAR}
+
+	</select>
+	
+</mapper>

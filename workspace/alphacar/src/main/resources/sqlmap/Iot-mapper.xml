@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="iot.mapper">
+	
+	<!-- 상태 수정 -->
+   <update id="state_update">
+      DECLARE
+         p_sensor_id number;
+      BEGIN
+       
+        select sensor_id into p_sensor_id from sensor where store_number = #{store_number}
+        and sensor_number = #{sensor_number};
+        
+        update state set now_state = #{now_state}, change_date = sysdate
+        where store_number = #{store_number}
+        and sensor_id = p_sensor_id;
+             
+      end;  
+   </update>
+	
+	
+</mapper>

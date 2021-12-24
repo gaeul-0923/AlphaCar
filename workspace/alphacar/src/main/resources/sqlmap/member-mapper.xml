@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member.mapper">
+
+	<!-- 카카오 로그인 -->
+	<select id="kakao_select" resultType="member.MemberVO">
+		select * from customer
+		where customer_email = #{customer_email}	
+	</select>
+	
+	<insert id="kakaoLogin">
+	<!-- 카카오 로그인 저장 -->
+		insert into customer (customer_email, customer_name, social)
+		values (#{customer_email} , #{customer_name}, K)
+	</insert>
+
+	<!-- 안드로이드 로그인 (id, pw 일치 여부 조회) -->
+	<select id="anLogin" resultType="member.MemberVO">
+		select * from customer
+		where customer_email = #{customer_email}
+		and customer_pw = #{customer_pw}	
+	</select>
+	
+	<!-- 안드로이드 회원가입 -->
+	<insert id="anJoin">
+		insert into customer (customer_email, customer_pw, customer_name, admin, customer_picture)
+		values ( #{customer_email}, #{customer_pw}, #{customer_name}, #{admin}, #{customer_picture, jdbcType=VARCHAR})	
+	</insert>
+	
+	<!-- 안드로이드 회원가입 이미지 없이 -->
+	<insert id="anJoinNoImg">
+		insert into customer (customer_email, customer_pw, customer_name, admin, customer_picture)
+        values ( #{customer_email}, #{customer_pw}, #{customer_name}, #{admin}, #{customer_picture, jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 아이디 중복검사 -->
+	<select id="anIdCheck" resultType="Integer">
+		select count(*) from customer
+		where customer_email = #{id}
+	</select>
+	
+	<!-- 멤버 정보 수정 -->
+	<update id="anMemberUpdate">
+		update customer set customer_pw = #{customer_pw}, customer_name = #{customer_name}, admin = #{admin}, customer_picture = #{customer_picture, jdbcType=VARCHAR}
+		where customer_email = #{customer_email}
+	</update>
+</mapper>

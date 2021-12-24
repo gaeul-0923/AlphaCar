@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="webmember.mapper">
+
+	<!-- 로그아웃시 자동로그인이 풀리는 맵퍼  -->
+	<update id="auto_logout">
+		update customer set com_name = #{com_name, jdbcType=VARCHAR},
+							ip_addr	= #{ip_addr, jdbcType=VARCHAR},
+							login_time = sysdate,
+							auto_login	= #{auto_login}
+		where customer_email = #{customer_email}
+	</update>
+	
+	<!-- 로그인시 chk가 Y이면 자동로그인 N이면 안되는 맵퍼 -->
+		<update id="update_auto">
+		update customer set com_name = #{com_name, jdbcType=VARCHAR},
+							ip_addr	= #{ip_addr, jdbcType=VARCHAR},
+							login_time = sysdate,
+							auto_login	= #{auto_login}
+		where customer_email = #{customer_email}
+	</update>
+	
+	
+	<!-- 자동 로그인 하기 -->
+	<select id="auto_login" resultType="member.WebMemberVO">
+		select * from customer where com_name = #{com_name, jdbcType=VARCHAR} and ip_addr = #{ip_addr, jdbcType=VARCHAR} and auto_login = 'Y'
+			and trunc(sysdate -  login_time)  in (0,1)
+	</select>
+
+	<!-- 로그인 (id, pw 일치 여부 조회) -->
+	<select id="member_login" resultType="member.WebMemberVO">
+		select * from customer
+		where customer_email = #{customer_email, jdbcType=VARCHAR}
+		and customer_pw = #{customer_pw}	
+	</select>
+	
+	<!-- 로그인 (id, pw 일치 여부 조회) -->
+	<select id="member_login_security" resultType="member.WebMemberVO">
+		select * from customer
+		where customer_email = #{customer_email}
+		
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="member_join">
+		declare
+			
+		begin
+			
+			INSERT into customer (customer_email, customer_pw, customer_name, customer_picture, admin, city, addr, joindate)
+			values (#{customer_email}, #{customer_pw}, #{customer_name}, #{customer_picture, jdbcType=VARCHAR}, #{admin},
+				#{city}, #{addr}, sysdate);
+			insert into authority (customer_email, authority_name, authority_number)
+			values (#{customer_email}, #{authority_name}, SEQ_AUTHORITY.nextval);
+		end;
+	</insert>
+
+	<!-- 아이디 중복 체크 -->
+	<select id="id_check" resultType="integer">
+		select count(*) from customer
+		where customer_email = #{id}
+	</select>
+	
+	<!-- social_email 존재 여부 조회 (소셜 로그인 이력 조회) -->
+	<select id="social_email" resultType="integer">
+		select count(*) from customer
+		where kakao = #{kakao}
+	</select>
+	
+	<update id="social_update">
+		update customer set customer_name = #{customer_name}
+		where kakao = #{kakao}
+	</update>
+	
+	<insert id="social_insert">
+		declare
+			
+		begin
+			insert into customer (customer_email, customer_name, kakao, social)
+			values ( #{customer_email}, #{customer_name}, #{kakao}, #{social});
+			insert into authority (customer_email, authority_number)
+			values (#{customer_email}, SEQ_AUTHORITY.nextval);
+		end;
+	</insert>
+	
+	<select id="social_login" resultType="security.CustomUserDetails">
+		select * from customer
+		where kakao = #{kakao}
+	</select>
+</mapper>

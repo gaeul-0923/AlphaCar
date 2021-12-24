@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="homeChart.mapper">
+
+	<!-- 월별 이용자수 조회 -->
+	<select id="month_list" resultType="homeChart.ChartVO">
+	
+		
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 1 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 2 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 3 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 4 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 5 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 6 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 7 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 8 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 9 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 10 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 11 and store_number = #{store_number}
+		UNION ALL
+		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 12 and store_number = #{store_number}
+		
+	  
+	</select>
+	
+	<!-- 이번 달 몰리는 시간대 랭크 -->
+	<select id="time_rank" resultType="homeChart.ChartVO">
+		 select to_char(log, 'HH24') time, count(to_char(log, 'HH24') ) cnt
+		 from state_log
+		 where to_char(log, 'MM') = to_char(sysdate, 'MM')
+		 and store_number = #{store_number}
+		 and in_out = 'I'
+		 group by to_char(log, 'HH24') 
+		 order by cnt desc
+	</select>
+	
+	<!-- 해당 주 요일별 이용자 수 조회 -->
+	<select id="week_cnt" resultType="homeChart.ChartVO">
+		SELECT a.* , nvl(b.visitor,0) customer
+		FROM (select 1 dcode from dual 
+		union
+		select 2 dcode from dual 
+		union
+		select 3 dcode from dual 
+		union
+		select 4 dcode from dual 
+		union
+		select 5 dcode from dual 
+		union
+		select 6 dcode from dual 
+		union
+		select 7 dcode from dual ) a left outer join
+		(select count(to_char(log, 'd') ) visitor , to_char(log-1, 'd') dcode
+		from state_log
+		where to_char(log, 'MM') = to_char(sysdate, 'MM')
+		and log between to_char(trunc(sysdate,'D')+1,'yyyy-MM-dd') and to_char(trunc(sysdate,'D')+7,'yyyy-MM-dd') 
+		and store_number = #{store_number}
+		and in_out = 'I'
+		group by to_char(log-1, 'd')) b on a.dcode = b.dcode
+		order by a.dcode
+	</select>
+	
+	
+</mapper>

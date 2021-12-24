@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="store.mapper">
+
+	<!-- 가게 검색 -->
+	<select id="name" resultType="store.StoreVO">
+		select s.*
+		from store s
+		where s.store_name like '%'||#{name}||'%'
+	</select>
+
+	<select id="file" resultType="store.Store_FileVO">
+		select s.*, f.*
+		from store s left
+		outer join store_file f on s.store_number = f.store_number
+		where f.rank
+		= 1
+		order by s.store_favorite_cnt desc
+	</select>
+	
+	<select id="master" resultType="store.Store_FileVO">
+		select s.*, f.*
+		from store s left
+		outer join store_file f on s.store_number = f.store_number
+		where s.customer_email = #{customer_email,jdbcType=VARCHAR}
+		and f.rank = 1
+		order by s.store_number
+	</select>
+	
+	
+	<select id="img_file" resultType="store.RegFileVO">
+		select *
+		from store_file
+		where store_number = #{store_number}
+	</select>
+
+	<select id="list" resultType="store.StoreVO">
+		select * from store
+	</select>
+	
+<!-- 	<select id="detail" resultType="store.StoreVO">
+			select s.*, (select now_state from state where s.store_number = store_number) now_state 
+			from store s
+			where store_number = #{store_number}
+	</select>  -->
+	
+	<select id="detail" resultType="store.StoreVO">
+		select s.*, sf.* , f.fav_number 
+		from store s left
+		outer join store_file sf on s.store_number = sf.store_number left
+		outer join favorite f on s.store_number = f.store_number
+			where s.store_number = #{store_number}
+	</select> 
+	
+	<select id="allList" resultType="store.StoreVO"> 
+ 		select s.* , st.*
+		from store s left outer join state st on s.store_number = st.store_number
+		where s.store_number = #{store_number}
+		ORDER BY st.inventory_number
+	</select>
+
+ 	<insert id="register">
+		DECLARE
+			V_STORE_NUM number ;
+			V_SENSOR number;
+			V_MAX_ID number;
+		BEGIN
+		
+		SELECT NVL(MAX(FILE_ID),0)  INTO  V_MAX_ID from store_file;
+     SELECT SEQ_STORE.nextval  INTO  V_STORE_NUM from DUAL;
+     SELECT NVL(MAX(SENSOR_ID),0)  INTO  V_SENSOR from SENSOR;
+    INSERT ALL
+			into store (store_number, customer_email, store_name, store_post, store_addr, store_detail_addr, 
+			store_tel, store_time, 
+			store_dayoff, introduce, inventory, store_price, store_master_name, store_registration_number)
+			values (V_STORE_NUM, #{customer_email, jdbcType=VARCHAR}, #{store_name, jdbcType=VARCHAR}, 
+			#{store_post, jdbcType=VARCHAR}, #{store_addr, jdbcType=VARCHAR}, #{store_detail_addr, jdbcType=VARCHAR},
+			#{store_tel, jdbcType=VARCHAR}, #{store_time, jdbcType=VARCHAR}, 
+			#{store_dayoff, jdbcType=VARCHAR}, #{introduce, jdbcType=VARCHAR}, 
+			#{inventory, jdbcType=VARCHAR}, #{store_price, jdbcType=VARCHAR}, 
+			#{store_master_name, jdbcType=VARCHAR}, #{store_registration_number, jdbcType=VARCHAR})
+			into store_file values (V_MAX_ID+1 , V_STORE_NUM , #{imgpath1}, #{imgname1} , 1)
+			into store_file values (V_MAX_ID+2 , V_STORE_NUM , #{imgpath2}, #{imgname2}, 2)
+			into store_file values (V_MAX_ID+3 , V_STORE_NUM , #{imgpath3}, #{imgname3}, 3)
+			SELECT 1
+	    FROM dual ;
+		
+			<foreach collection="now_state" item="item" index="i" >
+			  SELECT V_SENSOR + 1 INTO V_SENSOR FROM dual ;
+		      INSERT INTO SENSOR (SENSOR_ID, LATITUDE, LONGITUDE, STORE_NUMBER, sensor_number)
+				 	VALUES (V_SENSOR  , 1 , 2 ,V_STORE_NUM, #{i, jdbcType=VARCHAR}+1 );
+		      INSERT INTO STATE(INVENTORY_NUMBER, STORE_NUMBER, SENSOR_ID, NOW_STATE, CREATE_DATE, CHANGE_DATE)
+				  VALUES (V_SENSOR  , V_STORE_NUM , V_SENSOR , #{item, jdbcType=VARCHAR}, sysdate, sysdate );
+			
+			  COMMIT;
+	    </foreach>
+
+		END;
+
+	</insert>
+	
+	<update id="update_store">
+	update store
+	set store_name = #{store_name, jdbcType=VARCHAR}, 
+		store_master_name = #{store_master_name, jdbcType=VARCHAR},
+		store_post = #{store_post, jdbcType=VARCHAR}, 
+		store_tel =  #{store_tel, jdbcType=VARCHAR}, 
+		store_time = #{store_time, jdbcType=VARCHAR},
+		store_dayoff = #{store_dayoff, jdbcType=VARCHAR},
+		introduce = #{introduce, jdbcType=VARCHAR},
+	 	inventory = #{inventory},
+	 	store_price = #{store_price,  jdbcType=VARCHAR},
+		store_registration_number = #{store_registration_number, jdbcType=VARCHAR},
+		store_detail_addr = #{store_detail_addr,  jdbcType=VARCHAR},
+		store_addr =#{store_addr,  jdbcType=VARCHAR}
+	where store_number = #{store_number}
+	</update>
+	
+	<update id="img_update">
+	update store_file
+	set imgpath= #{imgpath,  jdbcType=VARCHAR} ,imgname = #{imgname, jdbcType=VARCHAR}
+	where store_number = #{store_number}
+	and rank = #{rank}
+	</update>
+	
+	
+</mapper>

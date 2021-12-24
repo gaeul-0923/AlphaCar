@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="homeMyPage.mapper">
+	<!--웹 회원 정보 수정 -->
+	<update id="memberUpdate">
+		declare
+				
+		begin
+        
+        update customer set customer_pw = #{customer_pw}, 
+					customer_name = #{customer_name}, 
+					customer_picture = #{customer_picture},
+					city = #{city},
+					admin = #{admin},
+					addr = #{addr}
+				where customer_email = #{customer_email};
+				
+        update authority set authority_name = #{authority_name}
+        where customer_email = #{customer_email};
+        
+		end;
+	</update>
+	
+	<!--웹 회원 정보 수정 -->
+	<update id="memberSocialUpdate">
+		declare
+				
+		begin
+        
+        update customer set customer_name = #{customer_name}, 
+					customer_picture = #{customer_picture},
+					city = #{city},
+					admin = #{admin},
+					addr = #{addr}
+				where customer_email = #{customer_email};
+				
+        update authority set authority_name = #{authority_name}
+        where customer_email = #{customer_email};
+        
+		end;
+	</update>
+	
+	<!--알파카가 하는 회원 정보 수정 -->
+	<update id="AlphacarMemberUpdate">
+		declare
+		
+		begin
+			update customer set 
+				customer_name = #{customer_name}, 
+				admin = #{admin},
+				customer_picture = #{customer_picture},
+				city = #{city},
+				addr = #{addr}
+			where customer_email = #{customer_email};
+			
+			update authority set authority_name = #{authority_name}
+			where customer_email = #{customer_email};
+		end;
+	</update>
+	
+	
+	<!-- 내회사 리스트 뽑아오기 -->
+	<select id="company_select" resultType="homeMypage.HomeCompanyVO">
+		select * 
+		from store s, store_file f
+		where s.customer_email = #{customer_email} 
+			and s.store_number = f.store_number
+	</select>
+	<!-- 전체 회사 리스트 뽑아오기 -->
+	<select id="company_list_all" resultType="homeMypage.HomeCompanyVO">
+		select * 
+		from store
+	</select>
+	<!-- 회사정보를 조회하고 좋아요 순으로 정렬 -->
+    <select id="company_list_all_fv" resultType="homeMypage.HomeCompanyVO">
+        select * 
+        from store s, (select imgpath, store_number from store_file where rank = 1) f
+        where s.store_number = f.store_number
+        order by store_favorite_cnt desc
+    </select>
+    
+	
+	<!-- 회사를 번호로 조회하기 -->
+	<select id="company_select_number" resultType="homeMypage.HomeCompanyVO">
+		select * 
+		from store s, store_file f
+		where s.store_number = #{store_number} 
+			and s.store_number = f.store_number
+	</select>
+	
+	<!-- 내 회사 지우기 -->
+	<delete id="company_delete">
+		delete from store
+		where store_number = #{store_number}	
+	</delete>
+	
+	<!-- 회원정보 select -->
+	<select id="customerList" resultType="member.WebMemberVO">
+		select *
+		from (select rownum no, w.* 
+				from ( select * 
+					   from customer
+					   <include refid="where_search" />
+					   order by joindate) w
+			  order by w.joindate desc)
+		where no between #{beginList} and #{endList}
+	</select>
+	
+	<sql id = 'where_search'>
+		<if test='search == "M"'>
+			where admin = 'M' 
+		</if>
+		<if test='search == "C"'>
+			where admin = 'C' 
+		</if>
+ 		<if test='search == "all"'>
+   			<if test="keyword != null">
+   				where customer_email like '%'||#{keyword}||'%' or customer_name like '%'||#{keyword}||'%'
+   			</if>
+		</if>
+		<if test='search == "customer_name"'>
+   			<if test="keyword != null">
+   				where customer_name like '%'||#{keyword}||'%'
+   			</if>
+		</if>
+		<if test='search == "customer_email"'>
+			<if test="keyword != null">
+   				where customer_email like '%'||#{keyword}||'%'
+   			</if>
+		</if> -->
+	</sql>
+	
+	<!-- 전체 공지글 수 조회 -->
+	<select id="customerTotalList" resultType="integer">
+		select count(*) from customer <include refid="where_search" />
+	</select>
+	
+	<!-- 한명의 회원 정보 가져오기 -->
+	<select id="company_select_one" resultType="member.WebMemberVO">
+		select * 
+		from customer
+		where customer_email = #{customer_email} 
+	</select>
+	
+	<!-- 회원지우기 -->
+	<delete id="home_member_delete">
+		delete from customer
+		where customer_email = #{customer_email}	
+	</delete>
+	
+	<!-- 신규 가게 등록 -->
+	<insert id="company_register">
+		DECLARE
+			V_STORE_NUM number ;
+			V_SENSOR number;
+			V_MAX_ID number;
+		BEGIN
+		
+		SELECT NVL(MAX(FILE_ID),0)  INTO  V_MAX_ID from store_file;
+    SELECT SEQ_STORE.nextval  INTO  V_STORE_NUM from DUAL;
+    SELECT NVL(MAX(SENSOR_ID),0)  INTO  V_SENSOR from SENSOR;
+    INSERT ALL
+			into store (store_number, customer_email, store_name, store_post, store_addr, store_detail_addr, store_tel, 
+				store_time, store_dayoff, introduce, inventory, store_price, store_master_name, store_registration_number)
+			values (V_STORE_NUM, #{customer_email, jdbcType=VARCHAR}, #{store_name, jdbcType=VARCHAR}, 
+				#{store_post, jdbcType=VARCHAR}, #{store_addr, jdbcType=VARCHAR}, #{store_detail_addr, jdbcType=VARCHAR}, 
+				#{store_tel, jdbcType=VARCHAR}, #{store_time, jdbcType=VARCHAR}, 
+				#{store_dayoff, jdbcType=VARCHAR}, #{introduce, jdbcType=VARCHAR}, 
+				#{inventory, jdbcType=VARCHAR}, #{store_price, jdbcType=VARCHAR}, 
+				#{store_master_name, jdbcType=VARCHAR}, #{store_registration_number, jdbcType=VARCHAR})
+				
+			SELECT 1
+	    FROM dual ;
+	    
+	    
+		
+			<foreach collection="now_state" item="item" index="i" >
+			  SELECT V_SENSOR + 1 INTO V_SENSOR FROM dual ;
+			  
+	      INSERT INTO SENSOR (SENSOR_ID, LATITUDE, LONGITUDE, STORE_NUMBER, sensor_number)
+			 	VALUES (V_SENSOR  , 1 , 2 ,V_STORE_NUM, #{i, jdbcType=VARCHAR}+1 );
+	      INSERT INTO STATE(INVENTORY_NUMBER, STORE_NUMBER, SENSOR_ID, NOW_STATE, CREATE_DATE, CHANGE_DATE)
+			  VALUES (V_SENSOR  , V_STORE_NUM , V_SENSOR , #{item, jdbcType=VARCHAR}, sysdate, sysdate );
+			
+		
+		  	COMMIT;
+	    </foreach>
+
+		END;
+
+	</insert>
+	
+	<!-- 가게 이미지 저장 -->
+	<insert id="companyImg_insert">
+		insert into store_file (file_id, store_number, imgpath, imgname, rank)
+		values (seq_store_file.nextval, SEQ_STORE.currval, #{imgpath, jdbcType=VARCHAR}, #{imgname, jdbcType=VARCHAR}, #{rank, jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 회사id를 기준으로 회사정보 조회 -->
+	<select id="companyId_select" resultType="homeMypage.HomeStoreVO">
+		select * 
+		from store 
+		where store_number = #{store_number} 
+	</select>
+	
+	<!-- 가게id를 기준으로 가게 사진 조회 -->
+	<select id="companyId_img" resultType="homeMypage.HomeStoreFileVO">
+		select *
+		from store_file
+		where store_number = #{store_number} 
+	</select>
+	
+	<!-- 사업자 등록번호 중복검사 -->
+	<select id="memberCompanyDuplicate" resultType="integer">
+	 	select count(*)
+	   	from store
+	   	where STORE_REGISTRATION_NUMBER = #{id}
+	</select>
+
+	<!-- 가게 수정 -->
+   <update id="company_update">
+      DECLARE
+         p_sensor_id number;
+         p_inventory number;
+      BEGIN
+       
+         update store 
+         set store_name = #{store_name}, store_addr = #{store_addr}, 
+            store_tel = #{store_tel}, store_time = #{store_time}, store_dayoff = #{store_dayoff}, 
+            inventory = #{inventory, jdbcType=VARCHAR}, store_price = #{store_price}, 
+            store_master_name = #{store_master_name}, store_registration_number = #{store_registration_number}
+         where store_number = #{store_number};
+         
+         select inventory into p_inventory from store where store_number = #{store_number};
+         
+         
+         <foreach collection="now_state" item="item" index="i" >
+              select sensor_id into p_sensor_id from sensor 
+              where store_number = #{store_number}
+              and sensor_number = #{i, jdbcType=VARCHAR}+1;
+              
+               
+              update state set now_state = #{item, jdbcType=VARCHAR}
+              where store_number = #{store_number}
+              and sensor_id = p_sensor_id;
+              
+              commit;
+        </foreach>
+      end;  
+   </update>
+	
+	<!-- 가게 이미지 수정 -->
+	<update id="companyImg_update">
+		update store_file
+		set imgpath = #{imgpath, jdbcType=VARCHAR}, imgname = #{imgname, jdbcType=VARCHAR}, rank = #{rank, jdbcType=VARCHAR}
+		where store_number = #{store_number}
+		and rank = #{rank}
+	</update>
+</mapper>
