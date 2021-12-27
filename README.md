@@ -24,9 +24,17 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
 - etc : Notion, GitHub
 
 ## 화면
+
 ![ateam_db](https://user-images.githubusercontent.com/90816804/147405270-1b7452e0-86e3-434b-bd72-690e3a609543.jpg)
-
-
-
-
+-데이터베이스 설계도</br></br>
+![KakaoTalk_20211227_191958956_01](https://user-images.githubusercontent.com/90816804/147478849-699d525f-4c14-41ca-8ab9-1e0ff1cf3e40.jpg)
+-홈페이지 메인</br></br>
+![KakaoTalk_20211227_191958956](https://user-images.githubusercontent.com/90816804/147478974-65c8aaf1-0d11-4c5e-b581-4cfdf7029b54.jpg)
+-마이페이지</br></br>
+![20211227_222903](https://user-images.githubusercontent.com/90816804/147479046-84c5e169-1ba2-47c4-a849-40cb70498678.jpg)
+-데이터시각화</br></br>
+![20211227_225952](https://user-images.githubusercontent.com/90816804/147479171-aed8828b-a952-4433-8dc0-0a7027538f78.jpg)
+-페이징처리 된 게시판</br></br>
+![20211227_220839](https://user-images.githubusercontent.com/90816804/147479226-c2cfeb6d-0d4d-4789-918a-5c83b627d1e1.jpg)
+-내 가게 정보</br></br>
 
