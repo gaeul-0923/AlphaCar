@@ -34,7 +34,7 @@
 				
 			</div>
 			<div class="page_write_button">
-				<button>수정완료</button>
+				<button type="button" onclick="check()">수정완료</button>
 				<button type="button" onclick="if(confirm('정말 취소 하시겠습니까?')) { 
 					location.href='list.se'}">취소</button>
 				
@@ -49,3 +49,20 @@
   <script src="resources/js/lang/summernote-ko-KR.js"></script>
   <link rel="stylesheet" href="resources/css/summernote-lite.css">
 
+	<script type="text/javascript">
+
+	function check() {
+		if ($("#best_qna_title").val() == "") {
+			alert("제목을 입력하세요.");
+			$("#best_qna_title").focus();
+			return false;
+		}else if ($('#summernote').summernote('isEmpty')) {
+			  alert('editor content is empty');
+			  return false;
+		}else {
+			$('form').submit();
+		}
+		
+		
+	}
+	</script>

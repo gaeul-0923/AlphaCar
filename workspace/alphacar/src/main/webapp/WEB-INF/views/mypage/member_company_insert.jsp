@@ -4,7 +4,7 @@
 <div class="mypage_image"></div>
 <div class="mypage_select">
 	<div class="mypage_userinfo">
-		<a href=""><p class="mypage_userinfo_select">회원정보</p></a> 
+		<a href=""><p class="mypage_userinfo_select">세차장 정보 입력</p></a> 
 	</div>
 </div>
 </nav>
@@ -66,11 +66,14 @@
 					<input type="text" name="store_master_name" id="store_master_name" onkeyup="checkMaster()">
 					<div id="masterError"></div>
 				</div>
-				<div>
+				<div class="last_store_insert">
 					<h3>사업자 번호</h3>
 					<input type="text" name="store_registration_number" id="store_registration_number" onkeyup="checkRegi()">
-					<a id='btn_regi' onclick="regiDupl()">사업자 등록번호 중복검사</a>
-					<div id="regiError"></div>
+					<div class="last_store_insert_click">
+						<a id='btn_regi' onclick="regiDupl()">사업자 등록번호 중복검사</a>
+						<div id="regiError"></div>
+					</div>
+					
 				</div>
 				<div class="join_profile_images">
 					<h3>사진</h3>
@@ -195,11 +198,11 @@ function checkMaster() {
 
 function checkRegi() {
 	if(!regRegi.test(regi.value)) {
-		document.getElementById("regiError").innerText = "-를 제외한 등록번호(10자리)를 입력해주세요.";
+		document.getElementById("regiError").innerText = " -를 제외한 등록번호(10자리)를 입력해주세요.";
 		document.getElementById("regiError").style.color = "red";
 		reToken = false;
 	}else {
-		document.getElementById("regiError").innerText = "사업자 등록번호가 입력되었습니다.";
+		document.getElementById("regiError").innerText = " 사업자 등록번호가 입력되었습니다.";
 		document.getElementById("regiError").style.color = "green";
 		reToken = true;
 	}

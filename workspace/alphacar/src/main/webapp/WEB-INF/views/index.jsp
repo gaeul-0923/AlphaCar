@@ -129,7 +129,7 @@ let interval = getInterval(); // interval 등록
 	</c:forEach>
       <div>
         <a href="list.wa">
-          <p>세차장 전체보기</p>
+          <p>내 주변 세차장 보기</p>
         </a>
       </div>
     </div>

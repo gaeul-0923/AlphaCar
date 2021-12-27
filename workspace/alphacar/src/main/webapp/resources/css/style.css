@@ -979,15 +979,28 @@ input[type="checkbox"]:checked, input[type="radio"]:checked{
 .company_update>div{
   display: flex;
   height: 70px;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   margin: 0px 50px;
   align-items: center;
   border-bottom: 1px solid;
 }
 .company_update>div>input{
   font-size: var(--font-regular);
-  width: 80%;
+  width: 700px;
   height: 100%;
+}
+#store_registration_number{
+	width: 700px;
+}
+.last_store_insert_click{
+	width: 400px;
+}
+.company_update>div>h3{
+  display: inline-block;
+  width: 200px;
+}
+.company_update>div>div{
+  text-align: right;
 }
 .company_update_form>button{
   margin: 150px 0 100px 0;

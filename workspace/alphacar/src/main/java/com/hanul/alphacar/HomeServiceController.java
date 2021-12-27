@@ -81,9 +81,6 @@ public class HomeServiceController {
 	public String list(HttpSession session, Model model,
 			@RequestParam (defaultValue = "1") int curPage,
 			String search, String keyword) {
-		//System.out.println(service.faq_list());
-		//List<BestQnaVO> list =  service.faq_list();
-		//model.addAttribute("list",list);
 		
 		page.setCurPage(curPage);
 		page.setSearch(search);
@@ -98,13 +95,8 @@ public class HomeServiceController {
 	@RequestMapping ("/insert.sea")
 	public String insert (BestQnaVO vo, HttpSession session, MultipartFile file, String notice_search_index) {
 		
-//			MemberVO member = (MemberVO) session.getAttribute("loginInfo");
-//			vo.setWriter(member.getId());
-		
 		// 로그인 된 사용자의 id를 가져와 글쓴이(writer)에 담기 위한 처리
 		vo.setCustomer_email( ( (CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email() );
-		System.out.println(vo.getCustomer_email());
-		System.out.println(notice_search_index);
 		String index = "";
 		if (notice_search_index.equals("user-info") ) {
 			index = "C";

@@ -60,9 +60,10 @@
 	const userid = document.getElementById("userid").value;
 	const username = document.getElementById("username").value;
 	
+	
 	let revid = document.getElementById("revid").value;
-	let user_ref = 'users/' + userid + "/" + revid;
-	let rev_ref = 'users/' + revid + "/" + userid;
+	let user_ref = 'users/' + username + "/" + revid;
+	let rev_ref = 'users/' + revid + "/" + username;
 	
 	
 	
@@ -83,10 +84,10 @@
 	
 	//파이어베이스에서 user/운영자입니다에 있는 모든 childkey를 가져온다
 	function chatSelect() {
-		firebase.database().ref('users/a').once('value',
+		firebase.database().ref('users/admin').once('value',
 				 function(snapshot) { 
 			 });
-		firebase.database().ref('users/a').on('child_added', function(snapshot){
+		firebase.database().ref('users/admin').on('child_added', function(snapshot){
 			
 			
 				var childKey = snapshot.key;
@@ -121,8 +122,8 @@
 
 	
 	function changeRevId(reciveId) {
-		user_ref = 'users/' + userid + "/" + reciveId;
-		rev_ref = 'users/' + reciveId + "/" + userid;
+		user_ref = 'users/' + username + "/" + reciveId;
+		rev_ref = 'users/' + reciveId + "/" + username;
 		document.getElementById('revid').value = reciveId;
 		sessionChange(reciveId);
 		initChat();
@@ -141,7 +142,7 @@
 				console.log(childData.nickname);
 
 				var html = '';
-				if(childData.id == userid){
+				if(childData.nickname == username){
 					html = rtnHtmlDiv(childData.nickname, childData.msg, childData.date, 'chatuserdiv');
 				}else{
 					html = rtnHtmlDiv(childData.nickname, childData.msg, childData.date, 'chatrevdiv');
@@ -173,12 +174,12 @@
 	}
 	//메세지 보내기
 	function send_msg() {
-		send_fb(userid, user_ref);
-		send_fb(userid, rev_ref);
+		send_fb(username, user_ref);
+		send_fb(username, rev_ref);
 		//alert('전송 완료!');
 	}
 
-	function send_fb(userid, ref) {
+	function send_fb(username, ref) {
 		var date = rtnDate();
 		var msg = document.getElementById('usermsg').value;
 		var key = firebase.database().ref().child(ref).push().key;

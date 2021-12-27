@@ -22,10 +22,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
 	@SuppressWarnings("unchecked")
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		System.out.println("authentication : " + authentication);
 		String cus = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
-        System.out.println("authenticate : username ->"+cus);
         
         CustomUserDetails user = (CustomUserDetails) userDeSer.loadUserByUsername(cus);
         

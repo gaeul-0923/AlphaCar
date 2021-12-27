@@ -68,7 +68,6 @@ public class HomeMyPageController {
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		System.out.println(vo);
 		WebMemberVO memberVO = homeService.home_member_select(vo.getCustomer_email());
 		String newPw;
 		if (customer_pw.equals("")) {
@@ -97,8 +96,6 @@ public class HomeMyPageController {
 		
 		//화면에서 변경 입력한 정보를 db에 변경 저장한 후 상세화면으로 연결
 		if(cryptEncoder.matches(customer_old_pw, memberVO.getCustomer_pw())) {
-			System.out.println("일치");
-			System.out.println(vo);
 			vo.setCustomer_pw(newPw);
 			if (admin.equals("A")) {
 				vo.setAuthority_name("ROLE_ALPHACHR");
@@ -117,11 +114,10 @@ public class HomeMyPageController {
 			session.setAttribute("loginInfo", vo);
 
 		}else {
-			System.out.println("불일치");
 			out.println("<script>alert('회원정보가 일치하지 않습니다.'); location='mypage.mp'; </script>");
 			out.flush();
 		}  
-		
+
 		return "mypage.mp";
 
 	}	
@@ -140,7 +136,6 @@ public class HomeMyPageController {
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		System.out.println(vo);
 		WebMemberVO memberVO = homeService.home_member_select(vo.getCustomer_email());
 		
 		String uuid = session.getServletContext().getRealPath("resources")
@@ -178,10 +173,9 @@ public class HomeMyPageController {
 			
 			out.println("<script>alert('수정성공!'); location='mypage.mp'; </script>");
 			out.flush();
-			
+			vo.setSocial(memberVO.getSocial());
 			session.setAttribute("loginInfo", vo);
 		} else {
-			System.out.println("불일치");
 			out.println("<script>alert('회원정보가 일치하지 않습니다.'); location='mypage.mp'; </script>");
 			out.flush();
 		}  
@@ -217,14 +211,24 @@ public class HomeMyPageController {
 		page.setCurPage(curPage);
 		page.setSearch(search);
 		page.setKeyword(keyword);
-		//((WebMemberVO) session.getAttribute("loginInfo")).getCustomer_email() ;
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("customer_email", ((CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email());
-		map.put("page", page);
-		//DB에서 공지글 목록을 조회한 후 목록화면에 출력
-		model.addAttribute("page", service.member_qna_list(map));
 		
-		return "mypage/member_contact";
+		//DB에서 공지글 목록을 조회한 후 목록화면에 출력
+		List<Integer> list_qna_root = new ArrayList<Integer>();
+		String customer_email = ((CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email();
+		
+		list_qna_root = service.member_qna_list(customer_email);
+		if (list_qna_root.size() == 0) {
+			return "mypage/member_contact";
+		} else {
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("rootList", list_qna_root);
+			map.put("page", page);
+			page = service.member_qna_list(map);
+			model.addAttribute("page", page);
+			
+			return "mypage/member_contact";
+		}
 	}
 
 	//가게 삭제
@@ -285,12 +289,8 @@ public class HomeMyPageController {
     	homeService.company_update(vo);
     	
     	HomeStoreFileVO fvo = new HomeStoreFileVO(); 
-    	
     	List<HomeStoreFileVO> fList = homeService.company_img(store_number);
-    	for (int i = 0; i < fList.size(); i++) {
-			fList.get(i).getImgname();
-			System.out.println(fList.get(i).getImgname());
-		}
+    	
     	if(fileList.size() > 0 && !fileList.get(0).getOriginalFilename().equals("")) {
     		int rank = 0;
     		for(MultipartFile file:fileList) {
@@ -315,9 +315,8 @@ public class HomeMyPageController {
     			out.println("<script>alert('수정성공!'); location='memberCompany.mps'; </script>");
 				out.flush();
     		}
-        }
     	
-		
+        }
 		return "memberCompany.mps";
 	}
 	
@@ -331,7 +330,6 @@ public class HomeMyPageController {
 	@ResponseBody
 	@RequestMapping("/regiDupl.mps")
 	public boolean memberCompanyDuplicate(String id) {
-		System.out.println(id);
 		return homeService.memberCompanyDuplicate(id);
 	}
 
@@ -343,8 +341,6 @@ public class HomeMyPageController {
 		PrintWriter out = response.getWriter();
 		
 		vo.setCustomer_email( ( (CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email() );
-		//System.out.println(inventory);
-		System.out.println("===");
 		List<MultipartFile> fileList = req.getFiles("input_file");
 		ArrayList<String> storeInventory = new ArrayList<>();
 		for (int i =0; i< 9; i++){
@@ -355,7 +351,6 @@ public class HomeMyPageController {
 		  storeInventory.set(i,"Y"); 
 		}
 		 
-        
         for (int i = 0; i < storeInventory.size(); i++) {
 			vo.setNow_state(storeInventory.get(i));
 			
@@ -484,7 +479,7 @@ public class HomeMyPageController {
   	}
 	
 	//1:1문의 처리
-	@RequestMapping("/masterContact.mp")
+	@RequestMapping("/masterContact.mpa")
 	public String masterContact(HttpSession session, Model model, 
 			@RequestParam (defaultValue = "1") int curPage,
 			String search, String keyword, WebMemberVO vo) {

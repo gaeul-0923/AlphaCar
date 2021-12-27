@@ -14,6 +14,13 @@
 	<security:http pattern="/img/**" security="none"/>		
 	<security:http pattern="/ioTCarWash" security="none"/>		
 	<security:http pattern="/**/*.an" security="none"/>		
+	<security:http pattern="/homeStoreRegister.mps" security="none"/>		
+	<security:http pattern="board/comment/update" security="none"/>	
+	<security:http pattern="board/comment/list/*" security="none"/>	
+	<security:http pattern="board/comment/list/" security="none"/>	
+
+
+	
 	
 	<security:http auto-config="true" use-expressions="true"> 
 		<security:csrf disabled="true"/>
@@ -33,7 +40,6 @@
 		<security:intercept-url pattern="/**/*.noa" access="hasRole('ROLE_ALPHACHR')" />
 		<security:intercept-url pattern="/**/*.qna" access="hasRole('ROLE_ALPHACHR')" />
 		<security:intercept-url pattern="/**/*.sea" access="hasRole('ROLE_ALPHACHR')" />
-		<security:intercept-url pattern="/masterContact.mp" access="hasRole('ROLE_ALPHACHR')" />
 		<security:intercept-url pattern="/**/*.cha" access="hasRole('ROLE_ADMIN')" />
 
 		
@@ -62,13 +68,13 @@
 			
 		<security:session-management>
 		    	<security:concurrency-control
-		    		max-sessions="2"
+		    		max-sessions="5"
 		    		error-if-maximum-exceeded="true"
 		    	/>
 		</security:session-management>
 			
 		<!-- 권한이 없어서 금지된 URI 접속할 때 보여줄 페이지(403 에러 페이지 대체) -->
-		<security:access-denied-handler error-page="/homeLogin" />
+		<security:access-denied-handler error-page="/no_permission" />
 		
 	</security:http> 
 	

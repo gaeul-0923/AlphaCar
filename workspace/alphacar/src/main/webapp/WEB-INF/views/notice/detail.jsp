@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
     <div class="sub_image">
         <img src="img/main_image.jpg" alt="">
     </div>
@@ -25,6 +27,7 @@
 	   <!-- 댓글 입력 -->
 	  <div class='comment'>
 	  	<div id='comment_list'>
+	  	<!-- 입력된 댓글이 나오는 곳 -->
 	  	</div>
 		<div id='comment_regist'> 
 			<textarea id="summernote" name="coment_content" class="comment_write"></textarea>	
@@ -32,7 +35,7 @@
 		</div>
 	  </div>
 	  <div class="page_write_button">
-		<button type="button" onclick="location.href='list.no'">목록으로</button>
+		<button type="button" onclick="location.href='list.no?curPage=${page.curPage }&serch=${page.search }&keyword=${page.keyword}'">목록으로</button>
 		<c:if test="${loginInfo.customer_email eq vo.customer_email || loginInfo.admin eq 'A'}">
 			<button type="button" onclick="location.href='update.noa?id=${vo.notice_id }'">수정</button>
 			<button type="button" onclick="
@@ -69,6 +72,7 @@
 	    });
 	
 	comment_list();
+	
 	//코맨트 버튼 눌렀을 때 처리
 	function comment_regist() {
 		if ( ${ empty loginInfo}) { 	
@@ -104,6 +108,7 @@
 			url: 'board/comment/list/${vo.notice_id}'
 			, success: function ( response ) {
 				$('#comment_list').html( response );
+				$('.comment_write').summernote('code', '');
 			}, error: function (req, text) {
 				alert (text + ":" + req.status);
 			}	

@@ -24,14 +24,14 @@
 					</select>
 				</div>
 				<div class="page_write_title">
-					<input type="text" placeholder="제목" name="best_qna_title">
+					<input type="text" placeholder="제목" name="best_qna_title" id="best_qna_title">
 				</div>
 			</div>
 			<div class="page_write_space">
 				<textarea id="summernote" name="best_qna_content"></textarea> 
 			</div>
 			<div class="page_write_button">
-				<button>작성완료</button>
+				<button type="button" onclick="check()">작성완료</button>
 				<button type="button" onclick="if(confirm('정말 취소 하시겠습니까?')) { 
 					location.href='list.se'}">취소</button>
 			</div>
@@ -45,7 +45,23 @@
   <script src="resources/js/lang/summernote-ko-KR.js"></script>
   <link rel="stylesheet" href="resources/css/summernote-lite.css">
 
-  
+  <script type="text/javascript">
+
+	function check() {
+		if ($("#best_qna_title").val() == "") {
+			alert("제목을 입력하세요.");
+			$("#best_qna_title").focus();
+			return false;
+		}else if ($('#summernote').summernote('isEmpty')) {
+			  alert('editor content is empty');
+			  return false;
+		}else {
+			$('form').submit();
+		}
+		
+		
+	}
+</script>
 
 	
 	

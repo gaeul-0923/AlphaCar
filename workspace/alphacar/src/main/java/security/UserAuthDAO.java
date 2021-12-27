@@ -16,7 +16,6 @@ public class UserAuthDAO{
 
 	public CustomUserDetails getUserById(String username) {
 		// TODO Auto-generated method stub
-		System.out.println("CustomUserDetails "+ username);
 		return sql.selectOne("homeSecurity.mapper.selectUserById", username);
 
 	}

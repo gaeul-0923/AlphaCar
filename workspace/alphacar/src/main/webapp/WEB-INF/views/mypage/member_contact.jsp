@@ -14,38 +14,11 @@
   <main>
     <div id="page">
       <h1>내 1:1 문의 내역</h1>
-      <div class="page_index">
-      <form action="memberContact.mp" method="post">
-		    <input type="hidden" name="curPage" value="1" /> 
-	        <div class="page_select">
-	          <ul>
-	           	<li onclick="location.href='memberContact.mp'">전체</li>
-		          <li onclick="location.href='memberContact.mp?search=user-info'">고객</li>
-		          <li onclick="location.href='memberContact.mp?search=store'">가게</li>
-		          <li onclick="location.href='memberContact.mp?search=app_web'">모바일/홈페이지</li>
-		          <li onclick="location.href='memberContact.mp?search=alphacar'">알파카</li>
-	          </ul>
-	        </div>
-        </form>
-        <!-- service 검색기능 -->
-        <form action="memberContact.mp" method="get" class="page_search">
-      		<input type="hidden" name="curPage" value="1" /> 
-          <div class="page_search_index">
-            <select name="search" id="search">
-              <option value="all" ${page.search eq 'all' ? 'selected' : '' }>전체</option>
-	            <option value="user-info" ${page.search eq 'user-info' ? 'selected' : '' }>고객</option>
-	            <option value="store" ${page.search eq 'store' ? 'selected' : '' }>가게</option>
-	            <option value="app_web" ${page.search eq 'app_web' ? 'selected' : '' }>모바일/홈페이지</option>
-	            <option value="alphacar" ${page.search eq 'alphacar' ? 'selected' : '' }>알파카</option>
-            </select>
-          </div>
-          <div class="page_search_box">
-           <input type="text" placeholder="search" name="keyword" value="${page.keyword}">
-           <i class="fas fa-search" onclick='$("form").submit()'></i>
-         </div>
-        </form>
-      </div>
-      <!-- notice 글 목록  -->
+		<form action="memberContact.mp" method="post">
+			<input type="hidden" name="curPage" value="1" />
+		</form>
+
+		<!-- notice 글 목록  -->
       <div class="page_list">
         <div class="page_list_name">
           <h3>글</h3>
@@ -57,11 +30,10 @@
       	<c:forEach items="${page.list}" var="vo">
       		<div class="page_list_content">
 	          <div class="page_list_content_title">
-	          	<c:if test="${loginInfo.customer_email eq vo.customer_email || loginInfo.admin eq 'A'}">
-		          	<c:forEach begin="1" end='${vo.qna_indent }' var='i'>
-									${i eq vo.qna_indent ? "<img src='img/re.gif' />" : "&nbsp;&nbsp;" }
-								</c:forEach>			
-	            	<a href='detail.qn?qna_id=${vo.qna_id }'>
+	          	<c:forEach begin="1" end='${vo.qna_indent }' var='i'>
+								${i eq vo.qna_indent ? "<img src='img/re.gif' />" : "&nbsp;&nbsp;" }
+							</c:forEach>			
+            	<a href='detail.qn?qna_id=${vo.qna_id }'>
 	            	<c:if test="${vo.qna_attribute eq 'C'}">
 	              	<p>[고객]</p>
 	              </c:if>
@@ -75,29 +47,7 @@
 	              	<p>[알파카]</p>
 	              </c:if>
 	              <p>${vo.qna_title}</p>
-	            </a>
-	            </c:if>
-	          	<c:if test="${loginInfo.customer_email ne vo.customer_email && loginInfo.admin ne 'A'}">
-	          		<c:forEach begin="1" end='${vo.qna_indent }' var='i'>
-									${i eq vo.qna_indent ? "<img src='img/re.gif' />" : "&nbsp;&nbsp;" }
-								</c:forEach>			
-	            	<a href='check.qn?qna_id=${vo.qna_id }'>
-	            	<c:if test="${vo.qna_attribute eq 'C'}">
-	              	<p>[고객]</p>
-	              </c:if>
-	              <c:if test="${vo.qna_attribute eq 'S'}">
-	              	<p>[가게]</p>
-	              </c:if>
-	              <c:if test="${vo.qna_attribute eq 'M'}">
-	              	<p>[모바일/홈페이지]</p>
-	              </c:if>
-	              <c:if test="${vo.qna_attribute eq 'A'}">
-	              	<p>[알파카]</p>
-	              </c:if>
-	              <p>${vo.qna_title}</p>
-	            </a>
-	            </c:if>
-	              
+            	</a>
 	          </div>
 	          <p>${vo.customer_name}</p>
 	          <p>${vo.qna_readcnt}</p>

@@ -74,26 +74,44 @@ public class QnaDAO implements QnaService {
 	}
 
 	@Override
-	public List<QnaVO> member_qna_list(String customer_email) {
+	public List<Integer> member_qna_list(String customer_email) {
 		// TODO Auto-generated method stub
-		return sql.selectList("homeQna.mapper.homeMembertotalList", customer_email);
+		return sql.selectList("homeQna.mapper.homeMemberQnaList", customer_email);
 	}
 
 	//로그인 된 경우 목록 조회
 	@Override
 	public QnaPage member_qna_list(HashMap<String, Object> map) {
-		
+			
 		QnaPage page = (QnaPage)map.get("page");
-		page.setTotallist( sql.selectOne("homeQna.mapper.homeMembertotalList", map) );        
-		page.setList( sql.selectList("homeQna.mapper.homeMemberQnaList", map) );
+		page.setTotallist( sql.selectOne("homeQna.mapper.homeMembertotalList", map) );
+		map.put("page", page);
+		page.setList( sql.selectList("homeQna.mapper.homeMemberQnaPageList", map) );
 		return page;
-		
-	}
+			
+		}
 
 	@Override
 	public void reply_update(QnaVO vo) {
 		sql.update("homeQna.mapper.homeQnaReplyUpdate", vo);
 		
+	}
+	
+	@Override
+	public List<QnaVO> member_qna_list(List<Integer>list_qna_root) {
+		// TODO Auto-generated method stub
+		return sql.selectList("homeQna.mapper.homeMemberQnaReplyList", list_qna_root);
+	}
+
+	@Override
+	public List<Integer> delete_list(QnaVO vo) {
+		// TODO Auto-generated method stub
+		return sql.selectList("homeQna.mapper.homeQnaDeleteList", vo);
+	}
+
+	@Override
+	public void qna_delete(List<Integer> list_qna_root) {
+		sql.delete("homeQna.mapper.homeQnaDeleteAll", list_qna_root);
 	}
 
 }

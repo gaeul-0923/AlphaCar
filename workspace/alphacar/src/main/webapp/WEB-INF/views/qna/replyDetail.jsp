@@ -27,7 +27,7 @@
 				</p>
 		  </div>
 		  <div class="page_write_button">
-			<button type="button" onclick="location.href='masterContact.mp'">목록으로</button>
+			<button type="button" onclick="location.href='masterContact.mpa'">목록으로</button>
 			<!-- 관리자로 로그인된 경우만 수정 가능 -->
 			<c:if test="${loginInfo.customer_email eq vo.customer_email}">
 	    	<button type="button" onclick="location.href='update.qn?qna_id=${vo.qna_id}'">수정</button>

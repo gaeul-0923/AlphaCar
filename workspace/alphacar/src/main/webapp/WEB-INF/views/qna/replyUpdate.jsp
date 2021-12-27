@@ -29,27 +29,32 @@
 			<div class="page_write_button">
 				<button type="button" onclick='check()'>수정완료</button>
 				<button type="button" onclick="if(confirm('정말 취소 하시겠습니까?')) { 
-					location.href='masterContact.mp'}">취소</button>
+					location.href='masterContact.mpa'}">취소</button>
 			</div>
 		</form>
     </div>
   </main>
   
-  <script type="text/javascript">
-	let title   = document.getElementById("qna_title");
-	
-	function check() {
-		if(title.value == "") {
-		alert("제목을 입력하세요.");
-		title.focus();
-		}else {
-			$('form').submit();
-		}
-	}
-	</script>
   <!-- 서머노트를 위해 추가해야할 부분 -->
   <script src="resources/js/summernote-lite.js"></script>
   <script src="resources/js/summernote.js"></script>
   <script src="resources/js/lang/summernote-ko-KR.js"></script>
   <link rel="stylesheet" href="resources/css/summernote-lite.css">
   
+  <script type="text/javascript">
+
+	function check() {
+		if ($("#qna_title").val() == "") {
+			alert("제목을 입력하세요.");
+			$("#qna_title").focus();
+			return false;
+		}else if ($('#summernote').summernote('isEmpty')) {
+			  alert('editor content is empty');
+			  return false;
+		}else {
+			$('form').submit();
+		}
+		
+		
+	}
+</script>

@@ -19,8 +19,8 @@
 				<input type="text" name="customer_email"
 					   value="${loginInfo.customer_email}"
 					   class="join_email" id="email" readonly> 
-			  <input type="password" placeholder="기존 비밀번호를 작성해주세요." 
-			    			 class="old_join_pw" id="written_pw" name="customer_old_pw">
+			    <input type="password" placeholder="기존 비밀번호를 작성해주세요." 
+			    	   			class="old_join_pw" id="written_pw" name="customer_old_pw">
 				<input type="password" name="customer_pw" placeholder="변경할 비밀번호"
 					class="join_pw" id="new_pw" onkeyup="checkPw()">
 				<div id="pwError"></div>
@@ -113,28 +113,28 @@ let pwToken = true;
 let p2Token = true;
 let nmToken = true;
 
-const regPw    = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
+const regPw = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/
+//const regPw    = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
 const regName  = /^[가-힣]{2,4}$/
 
 function checkOldPw() {
-// 	if(mypageSocial.value != ""){
-// 		wpToken = true;
-// 	}else if(oldPw.value != wrtPw.value) {	
-// 		document.getElementById("oldPwError").innerText = "기존의 비밀번호가 아닙니다.";
-// 		document.getElementById("oldPwError").style.color = "red";
-// 		wpToken = false;	
-// 	}else {
-// 		document.getElementById("oldPwError").innerText = "기존의 비밀번호가 맞습니다.";
-// 		document.getElementById("oldPwError").style.color = "green";
-// 		wpToken = true;
+ 	if(mypageSocial.value != ""){
+ 		wpToken = true;
+ 	}/* else if(oldPw.value != wrtPw.value) {	
+ 		document.getElementById("oldPwError").innerText = "기존의 비밀번호가 아닙니다.";
+ 		document.getElementById("oldPwError").style.color = "red";
+ 		wpToken = false;	
+ 	}else {
+ 		document.getElementById("oldPwError").innerText = "기존의 비밀번호가 맞습니다.";
+ 		document.getElementById("oldPwError").style.color = "green";
+ 		wpToken = true;
 		
-// 	}
-	wpToken = true;
+ 	} */
 }
 
 function checkPw() {
 	if(!regPw.test(pw.value)) {
-		document.getElementById("pwError").innerText = "영문 대소문자와 숫자, 특수문자를 모두 포함하는 8자리 이상의 비밀번호를 입력하세요.";
+		document.getElementById("pwError").innerText = "영문과 숫자를 포함하는 6자리 이상의 비밀번호를 입력하세요.";
 		document.getElementById("pwError").style.color = "red";
 		pwToken = false;
 	}else {

@@ -8,7 +8,7 @@
       </div>
       <form class="form" method="post" action="webLogin.ho">
         <input type="text" placeholder="이메일" class="customer_email" id="customer_email" name="customer_email"
-        			value="${customer_email}" /> 
+        		value="${customer_email}" autofocus="autofocus"/> 
         <input type="password" placeholder="비밀번호" class="customer_pw" id="customer_pw"  name="customer_pw"
         				value="${customer_pw }" onkeypress = "if (event.keyCode == 13) go_login()" />
         <label>

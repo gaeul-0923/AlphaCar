@@ -35,10 +35,18 @@ public interface QnaService {
 	QnaVO check_pw(int qna_id);
 	
 	//고객과 점주일 경우 qna 목록 조회
-	List<QnaVO> member_qna_list(String customer_email);
-	
+	List<Integer> member_qna_list(String customer_email);
+//	List<QnaVO> member_qna_list(String customer_email);
+		
+	List<QnaVO> member_qna_list(List<Integer>list_qna_root);
+		
 	//고객과 점주일 경우 qna 목록조회 - 페이지 처리된
 	QnaPage member_qna_list(HashMap<String, Object> map);
+	
+	List<Integer> delete_list(QnaVO vo);
+	
+	void qna_delete(List<Integer>list_qna_root);
+
 }
 
 

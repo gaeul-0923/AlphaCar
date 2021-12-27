@@ -50,9 +50,10 @@ const input_file = document.querySelector('.image_upload');
 
 //이미지 파일 누를 때 input_file도 같이 클릭
 function choose_image() {
-	image.addEventListener('click', () => {
+	input_file.click();
+	/* image.addEventListener('click', () => {
 		input_file.click();
-	});
+	}); */
 }
 
 //첨부파일 선택시 처리
@@ -68,8 +69,9 @@ $(document).on('change', '.image_upload', function() {
 	}
 })
 
-const regEmail = /^[a-z0-9\.\-_]+@([a-z0-9\-]+\.)+[a-z]{2,6}$/
-const regPw    = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
+const regEmail = /^[a-z0-9\.\-_]+@([a-z0-9\-]+\.)+[a-z]{2,6}$/ 
+//const regPw    = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/
+const regPw = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/
 const regName  = /^[가-힣]{2,4}$/
 
 let email = document.getElementById("customer_email");
@@ -107,6 +109,7 @@ function checkEmail() {
 	if(!regEmail.test(email.value)) {
 		document.getElementById("emailError").innerText = "이메일 형식(예:abc@def.com)에 맞게 입력하세요.";
 		document.getElementById("emailError").style.color = "red";
+		emToken = false;
 	}else {
 		document.getElementById("emailError").innerText = "이메일이 입력되었습니다.";
 		document.getElementById("emailError").style.color = "green";
@@ -116,8 +119,9 @@ function checkEmail() {
 
 function checkPw() {
 	if(!regPw.test(pw.value)) {
-		document.getElementById("pwError").innerText = "영문 대소문자와 숫자, 특수문자를 모두 포함하는 8자리 이상의 비밀번호를 입력하세요.";
+		document.getElementById("pwError").innerText = "영문과 숫자를 포함하는 6자리 이상의 비밀번호를 입력하세요.";
 		document.getElementById("pwError").style.color = "red";
+		pwToken = false;
 	}else {
 		document.getElementById("pwError").innerText = "비밀번호가 입력되었습니다.";
 		document.getElementById("pwError").style.color = "green";
@@ -128,6 +132,7 @@ function checkPw2() {
 	if(pw2.value != pw.value) {
 		document.getElementById("pwError2").innerText = "비밀번호가 일치하지 않습니다.";
 		document.getElementById("pwError2").style.color = "red";
+		p2Token = false;
 	}else {
 		document.getElementById("pwError2").innerText = "비밀번호가 일치합니다.";
 		document.getElementById("pwError2").style.color = "green";
@@ -138,6 +143,7 @@ function checkName() {
 	if(!regName.test(name.value)) {
 		document.getElementById("nameError").innerText = "2-4자의 한글만 가능합니다.";
 		document.getElementById("nameError").style.color = "red";
+		nmToken = false;
 	}else {
 		document.getElementById("nameError").innerText = "이름이 입력되었습니다.";
 		document.getElementById("nameError").style.color = "green";

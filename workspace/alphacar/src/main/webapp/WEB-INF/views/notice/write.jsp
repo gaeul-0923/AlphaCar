@@ -26,8 +26,7 @@
 				</div>
 			</div>
 			<div class="page_write_space">
-				<textarea id="summernote" name="notice_content" cols="100">
-				</textarea>
+				<textarea id="summernote" name="notice_content"></textarea> 
 			</div>
 			<div class="page_write_button">
 				<button type="button" onclick="check()">작성완료</button>
@@ -44,21 +43,20 @@
 
   <!-- 제목, 내용 필수입력 -->
   <script type="text/javascript">
-  	let title   = document.getElementById("notice_title");
-  	let content = document.getElementById("notice_content");
-  	
-  	function check() {
-  		if(title.value == "") {
-			alert("제목을 입력하세요.");
-			title.focus();
-			return false;
-  		}else if(content.value == "") {
-			alert("내용을 입력하세요.");
-			content.focus();
-			return false;
-  		}else {
-			$('form').submit();
+	  function check() {
+		  
+			if ($("#notice_title").val() == "") {
+				alert("제목을 입력하세요.");
+				$("#notice_title").focus();
+				return false;
+			}else if ($('#summernote').summernote('isEmpty')) {
+				  alert('editor content is empty');
+				  return false;
+			}else {
+				$('form').submit();
+			}
+			
+			
 		}
-  	}
   </script>
 

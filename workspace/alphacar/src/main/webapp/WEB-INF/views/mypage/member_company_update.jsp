@@ -6,7 +6,7 @@
     </div>
     <div class="mypage_select">
       <div class="mypage_userinfo">
-        <a href=""><p class="mypage_userinfo_select">회원정보</p></a>
+        <a href=""><p class="mypage_userinfo_select">세차장 정보 수정</p></a>
 
       </div>
     </div>
@@ -69,7 +69,7 @@
 	            <input type="text" name="store_master_name" id="new_master" value="${vo.store_master_name }" onkeyup="checkMaster()">
 							<div id="masterError"></div>
 	          </div>
-	          <div>
+	          <div class="last_store_insert">
 	            <h3>사업자 번호</h3>
 	            <input type="text" name="store_registration_number" id="new_regi" value="${vo.store_registration_number }" readonly="readonly">
 	          </div>

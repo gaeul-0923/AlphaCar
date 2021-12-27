@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="homeNotice.mapper">
+	<!-- 글 목록 조회 -->	
+	<select id="homeNoticeList" resultType="homeNotice.HomeNoticeVO">
+		select *
+		from (select rownum no, w.*, ( select customer_name from customer c where c.customer_email = w.customer_email ) customer_name 
+				from ( select * 
+					   from web_notice 
+					   <include refid="where_search" /> 
+					   order by NOTICE_WRITEDATE) w
+			  order by no desc)
+		where no between #{beginList} and #{endList}
+	</select>
+	
+	
+	<sql id = 'where_search'>
+		<if test="search == 'notice' ">
+			where NOTICE_ATTRIBUTE = 'N' 
+			<if test="keyword != null">
+   				and notice_title like '%'||#{keyword}||'%'
+   			</if>
+		</if>
+		<if test="search == 'alphacer' ">
+			where NOTICE_ATTRIBUTE = 'A' 
+			<if test="keyword != null">
+   				and notice_title like '%'||#{keyword}||'%'
+   			</if>
+		</if>
+	
+		<if test="search == 'maintainance' ">
+			where NOTICE_ATTRIBUTE = 'M' 
+			<if test="keyword != null">
+   				and notice_title like '%'||#{keyword}||'%'
+   			</if>
+		</if>
+		<if test="search == 'all' ">
+			
+   			<if test="keyword != null">
+   				where notice_title like '%'||#{keyword}||'%'
+   			</if>
+		</if>
+	</sql>
+		
+	<!-- 전체 공지글 수 조회 -->
+	<select id="hometotalList" resultType="integer">
+		select count(*) from web_notice <include refid="where_search" />
+	</select>
+	
+	<!-- 글 자세히보기 -->
+	<select id="homeNoticeDetail" resultType="homeNotice.HomeNoticeVO">
+		select * 
+		from (select w.*, c.customer_name 
+			  from web_notice w, customer c
+			  where w.customer_email = c.customer_email)
+		where notice_id = #{id}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="homeNoticeRead">
+		update web_notice 
+		set notice_readcnt = notice_readcnt +1
+		where notice_id = #{id}	
+	</update>
+	
+	<!-- 글삭제 -->
+	<delete id="homeNoticeDelete">
+		delete from web_notice
+		where notice_id = #{id}	
+	</delete>
+	
+	<!-- 글작성 -->
+	<insert id="homeNoticeInsert">
+		insert into web_notice (notice_id, customer_email , notice_title, notice_content, notice_attribute)
+		values (SEQ_WEB_NOTICE.nextval, #{customer_email}, #{notice_title}, #{notice_content}, #{notice_attribute})
+	</insert>
+	<!-- 글 수정 -->
+	<update id="homeNoticeUpdate">
+		update web_notice set notice_title=#{notice_title}, notice_content=#{notice_content}
+				, notice_attribute = #{notice_attribute}
+		where notice_id = #{notice_id}
+	</update>
+	
+	<!-- 댓글 입력 -->
+	<insert id="commentInsert">
+		insert into web_notice_coment (NOTICE_COMENT_ID, NOTICE_ID, CUSTOMER_EMAIL, COMENT_CONTENT)
+		values ( SEQ_WEB_NOTICE_COMENT.nextval, #{notice_id}, #{customer_email}, #{coment_content})
+	</insert>
+	
+	<!-- 댓글 목록 조회 -->
+	<select id="commentList" resultType="homeNotice.HomeNoticeCommentVO">
+		select c.*, (select customer_name from customer where customer_email = c.customer_email) customer_name
+		from web_notice_coment c
+		where notice_id = #{notice_id}
+		order by coment_writedate
+	</select>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="commentDelete">
+		delete from web_notice_coment
+		where notice_coment_id = #{id}	
+	</delete>
+	
+	<!-- 댓글 수정 -->
+	<update id="commentUpdate">
+		update web_notice_coment set coment_content = #{coment_content}
+		where notice_coment_id = #{notice_coment_id}
+	</update>
+	
+</mapper>

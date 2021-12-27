@@ -12,7 +12,7 @@ public class QnaVO {
 	private int    qna_readcnt   ;
 	private String qna_filename   ;
 	private String qna_filepath   ;
-	private String qna_root   ;
+	private int qna_root   ;
 	private int qna_step   ; 
 	private int qna_indent ;
 	private String qna_attribute;
@@ -79,10 +79,10 @@ public class QnaVO {
 	public void setQna_filepath(String qna_filepath) {
 		this.qna_filepath = qna_filepath;
 	}
-	public String getQna_root() {
+	public int getQna_root() {
 		return qna_root;
 	}
-	public void setQna_root(String qna_root) {
+	public void setQna_root(int qna_root) {
 		this.qna_root = qna_root;
 	}
 	public int getQna_step() {
