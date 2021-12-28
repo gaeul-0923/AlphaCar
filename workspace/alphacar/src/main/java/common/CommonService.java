@@ -35,12 +35,9 @@ public class CommonService {
 		String resources = session.getServletContext().getRealPath("/resources");
 		// D:\TeamProject\AteamAlphaCar\AlphaCar_Spring\.metadata\.plugins\org.eclipse.wst.server.core\tmp0
 		// \wtpwebapps\alphacar\resources\pictures\profiles\00.jpg
-		
+
 		String folder = resources + "/pictures/" + category;
-//		String save = "http://192.168.25.60:8989/alphacar/resources/pictures/"+category;
-//		String folder = resources + "/upload/" + category + "/"
-//				+ new SimpleDateFormat("yyyy/MM/dd").format(new Date() );
-		
+		String save = "http://192.168.25.60:8989/alphacar/resources/pictures/"+category;
 //		String save = "http://192.168.0.22:8989/alphacar/resources/pictures/"+category;
 //		String save = "http://192.168.0.30:8989/alphacar/resources/pictures/"+category;
 		String uuid =  UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
@@ -54,8 +51,8 @@ public class CommonService {
 				e.printStackTrace();
 			}
 		// pictures\profiles\00.jpg
-		return folder.substring(resources.length() + 1) + "/" + uuid;
-//		return save + "/" + uuid;	
+		//return folder.substring(resources.length() + 1) + "/" + uuid;
+		return save + "/" + uuid;	
 	}
 	
 	

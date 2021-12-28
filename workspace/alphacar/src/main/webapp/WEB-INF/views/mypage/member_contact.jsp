@@ -5,7 +5,7 @@
     </div>
     <div class="mypage_select">
       <div class="mypage_userinfo">
-        <a href=""><p class="mypage_userinfo_select">회원정보</p></a>
+        <a href=""><p class="mypage_userinfo_select">마이페이지</p></a>
  
       </div>
     </div>

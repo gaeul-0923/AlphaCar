@@ -76,9 +76,9 @@
 	<!-- 공지사항 신규 글 등록 -->
 	<insert id="homeInsert">
 		insert into web_best_qna (best_qna_id, customer_email, best_qna_title,
-			best_qna_content, best_qna_filename, best_qna_filepath, best_qna_attribute)
+			best_qna_content, best_qna_attribute)
 		values ( seq_web_best_qna.nextval, #{customer_email}, #{best_qna_title}, #{best_qna_content}
-			, #{best_qna_filename, jdbcType=VARCHAR }, #{best_qna_filepath, jdbcType=VARCHAR }, #{best_qna_attribute})
+			, #{best_qna_attribute})
 	</insert>
 	
 	<!-- 공지 게시글 내용 수정 -->

@@ -62,13 +62,13 @@ public class HomeMyPageController {
 	}
 	//회원정보 수정 처리
 	@RequestMapping("/memberSubmit.mp")
-	public String memberUpdateWork(WebMemberVO vo, MultipartFile image_file, HttpSession session, String attach,
+	public String memberUpdateWork(CustomUserDetails vo, MultipartFile image_file, HttpSession session, String attach,
 			String customer_old_pw, String customer_pw, HttpServletResponse response, String admin, 
 			Authentication authentication) throws IOException {
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		WebMemberVO memberVO = homeService.home_member_select(vo.getCustomer_email());
+		CustomUserDetails memberVO = homeService.home_member_select(vo.getCustomer_email());
 		String newPw;
 		if (customer_pw.equals("")) {
 			newPw = memberVO.getCustomer_pw();
@@ -107,7 +107,7 @@ public class HomeMyPageController {
 				vo.setAuthority_name("ROLE_CUSTOMER");
 				vo.setAdmin("C");
 			}
-			homeService.home_member_update(vo);	
+			homeService.home_member_update(vo);
 			out.println("<script>alert('수정성공!'); location='mypage.mp'; </script>");
 			out.flush();
 
@@ -130,13 +130,13 @@ public class HomeMyPageController {
 	
 	//소셜 로그인시 회원정보 수정 처리
 	@RequestMapping("/memberSocialSubmit.mp")
-	public String memberSosialUpdateWork(WebMemberVO vo, MultipartFile image_file, HttpSession session, 
+	public String memberSosialUpdateWork(CustomUserDetails vo, MultipartFile image_file, HttpSession session, 
 			String attach, HttpServletResponse response, String admin, 
 			Authentication authentication) throws IOException {
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		WebMemberVO memberVO = homeService.home_member_select(vo.getCustomer_email());
+		CustomUserDetails memberVO = homeService.home_member_select(vo.getCustomer_email());
 		
 		String uuid = session.getServletContext().getRealPath("resources")
 				+ "/" + memberVO.getCustomer_picture();
@@ -168,7 +168,6 @@ public class HomeMyPageController {
 			vo.setAuthority_name("ROLE_CUSTOMER");
 			vo.setAdmin("C");
 		}
-		int a = homeService.home_social_update(vo);
 		if (homeService.home_social_update(vo) == -1) {
 			
 			out.println("<script>alert('수정성공!'); location='mypage.mp'; </script>");
@@ -195,8 +194,9 @@ public class HomeMyPageController {
 	//내 가게 정보
 	@RequestMapping("/memberCompany.mps")
 	public String memberCompany(HttpSession session, Model model) {
-		CustomUserDetails member = (CustomUserDetails) session.getAttribute("loginInfo");
-		model.addAttribute("company", homeService.company_list(member.getCustomer_email()));
+		String customer_email = ((CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email();
+		
+		model.addAttribute("company", homeService.company_list(customer_email));
 		return "mypage/member_company";
 	}
 	
@@ -211,18 +211,19 @@ public class HomeMyPageController {
 		page.setCurPage(curPage);
 		page.setSearch(search);
 		page.setKeyword(keyword);
+		//((WebMemberVO) session.getAttribute("loginInfo")).getCustomer_email() ;
 		
 		//DB에서 공지글 목록을 조회한 후 목록화면에 출력
-		List<Integer> list_qna_root = new ArrayList<Integer>();
+//		String customer_email = ((WebMemberVO) session.getAttribute("loginInfo")).getCustomer_email();
 		String customer_email = ((CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email();
 		
-		list_qna_root = service.member_qna_list(customer_email);
-		if (list_qna_root.size() == 0) {
+		List<QnaVO> qvo = service.member_qna_list(customer_email);
+		if (qvo.size() == 0) {
 			return "mypage/member_contact";
 		} else {
 			
 			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("rootList", list_qna_root);
+			map.put("qna_pid", qvo.get(0).getQna_pid());
 			map.put("page", page);
 			page = service.member_qna_list(map);
 			model.addAttribute("page", page);
@@ -415,7 +416,7 @@ public class HomeMyPageController {
 	//회원정보 수정 마스터 페이지로 이동
 	@RequestMapping("/mastermemberUpdate.mpa")
 	public String masterMemberUpdate(Model model, String customer_email) {
-		WebMemberVO vo = homeService.home_member_select(customer_email);
+		CustomUserDetails vo = homeService.home_member_select(customer_email);
 		model.addAttribute("vo", vo);
 
 		
@@ -433,7 +434,7 @@ public class HomeMyPageController {
     //마스터가 하는 회원정보 수정 처리
     @ResponseBody
   	@RequestMapping(value = "/mastermemberSubmit.mpa", produces = "text/html; charset=utf-8")
-  	public String mastermemberUpdateWork(WebMemberVO vo, MultipartFile image_file, HttpSession session, String attach
+  	public String mastermemberUpdateWork(CustomUserDetails vo, MultipartFile image_file, HttpSession session, String attach
   			,String admin, HttpServletRequest req){
     	StringBuffer msg = new StringBuffer("<script>");
 		

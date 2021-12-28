@@ -74,7 +74,7 @@ public class QnaDAO implements QnaService {
 	}
 
 	@Override
-	public List<Integer> member_qna_list(String customer_email) {
+	public List<QnaVO> member_qna_list(String customer_email) {
 		// TODO Auto-generated method stub
 		return sql.selectList("homeQna.mapper.homeMemberQnaList", customer_email);
 	}
@@ -97,21 +97,4 @@ public class QnaDAO implements QnaService {
 		
 	}
 	
-	@Override
-	public List<QnaVO> member_qna_list(List<Integer>list_qna_root) {
-		// TODO Auto-generated method stub
-		return sql.selectList("homeQna.mapper.homeMemberQnaReplyList", list_qna_root);
-	}
-
-	@Override
-	public List<Integer> delete_list(QnaVO vo) {
-		// TODO Auto-generated method stub
-		return sql.selectList("homeQna.mapper.homeQnaDeleteList", vo);
-	}
-
-	@Override
-	public void qna_delete(List<Integer> list_qna_root) {
-		sql.delete("homeQna.mapper.homeQnaDeleteAll", list_qna_root);
-	}
-
 }

@@ -4,10 +4,11 @@ package homeMypage;
 import java.util.List;
 
 import member.WebMemberVO;
+import security.CustomUserDetails;
 
 public interface HomeMyPageService {
 	//회원 정보 수정
-	int home_member_update(WebMemberVO vo);
+	int home_member_update(CustomUserDetails vo);
 	//내 회사 불러오기
 	List<HomeCompanyVO> company_list(String customer_email);
 	//회사 삭제
@@ -17,7 +18,7 @@ public interface HomeMyPageService {
 	//공지글 목록 조회 - 페이지 처리된
 	CustomerPage customer_list(CustomerPage page);
 	//회원정보 하나 불러오기
-	WebMemberVO home_member_select(String customer_email);
+	CustomUserDetails home_member_select(String customer_email);
 	//신규 가게 등록
 	int company_insert(HomeStoreVO vo);
 	
@@ -46,9 +47,9 @@ public interface HomeMyPageService {
     List<HomeCompanyVO> company_list_all_fv();
     
     //알파카가 하는 회원 정보 수정
-  	int member_update(WebMemberVO vo);
+  	int member_update(CustomUserDetails vo);
   	
   	//소셜 로그인 시 회원정보 수정
-  	int home_social_update(WebMemberVO vo);
+  	int home_social_update(CustomUserDetails vo);
     
 }

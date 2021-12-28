@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import homeNotice.HomeNoticeVO;
 import member.WebMemberVO;
+import security.CustomUserDetails;
 
 @Repository
 public class HomeMyPageDAO implements HomeMyPageService {
@@ -15,7 +16,7 @@ public class HomeMyPageDAO implements HomeMyPageService {
 	@Autowired private SqlSession sql;
 
 	@Override
-	public int home_member_update(WebMemberVO vo) {
+	public int home_member_update(CustomUserDetails vo) {
 		return sql.update("homeMyPage.mapper.memberUpdate", vo);
 	}
 
@@ -64,7 +65,7 @@ public class HomeMyPageDAO implements HomeMyPageService {
 	}
 
 	@Override
-	public WebMemberVO home_member_select(String customer_email) {
+	public CustomUserDetails home_member_select(String customer_email) {
 		return sql.selectOne("homeMyPage.mapper.company_select_one", customer_email);
 	}
 
@@ -116,13 +117,13 @@ public class HomeMyPageDAO implements HomeMyPageService {
     }
 
 	@Override
-	public int member_update(WebMemberVO vo) {
+	public int member_update(CustomUserDetails vo) {
 		// TODO Auto-generated method stub
 		return sql.update("homeMyPage.mapper.AlphacarMemberUpdate", vo);
 	}
 
 	@Override
-	public int home_social_update(WebMemberVO vo) {
+	public int home_social_update(CustomUserDetails vo) {
 		// TODO Auto-generated method stub
 		return sql.update("homeMyPage.mapper.memberSocialUpdate", vo);
 	}

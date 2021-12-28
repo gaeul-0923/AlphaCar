@@ -149,6 +149,14 @@ public class CustomUserDetails implements UserDetails{
 	public void setKakao(String kakao) {
 		this.kakao = kakao;
 	}
+
+	public String getAuthority_name() {
+		return authority_name;
+	}
+
+	public void setAuthority_name(String authority_name) {
+		this.authority_name = authority_name;
+	}
 	
 	
 	

@@ -41,7 +41,9 @@ public class HomeQnaController {
 //					vo.setWriter(member.getId());
 		
 		// 로그인 된 사용자의 id를 가져와 글쓴이(writer)에 담기 위한 처리
-		vo.setCustomer_email( ( (CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email() );
+		String customer_email = ( (CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email();
+		vo.setCustomer_email( customer_email );
+		vo.setQna_pid(customer_email);
 		String index = "";
 		if (qna_search_index.equals("user-info") ) {
 			index = "C";
@@ -53,7 +55,6 @@ public class HomeQnaController {
 			index = "A";
 		}
 		vo.setQna_attribute(index);
-		vo.setQna_password(qna_password);
 		
 		// 화면에서 입력한 정보를 DB에 저장한 후 화면으로 연결(출력)
 		service.qna_insert(vo);
@@ -142,7 +143,8 @@ public class HomeQnaController {
 	public String reply_insert (QnaVO vo, HttpSession session, int qna_id) {
 		// 로그인 된 사용자의 id를 가져와 글쓴이(writer)에 담기 위한 처리
 		vo.setCustomer_email( ( (CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email() );
-
+		QnaVO qVo = service.qna_detail(qna_id);
+		vo.setQna_pid(qVo.getQna_pid());
 		// 화면에서 입력한 정보를 DB에 저장한 후 화면으로 연결(출력)
 		service.qna_reply_insert(vo);
 		

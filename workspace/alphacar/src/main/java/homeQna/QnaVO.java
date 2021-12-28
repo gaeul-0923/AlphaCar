@@ -17,13 +17,14 @@ public class QnaVO {
 	private int qna_indent ;
 	private String qna_attribute;
 	private String qna_time;
-	private String qna_password ;
+	private String qna_pid ;
 	
-	public String getQna_password() {
-		return qna_password;
+	
+	public String getQna_pid() {
+		return qna_pid;
 	}
-	public void setQna_password(String qna_password) {
-		this.qna_password = qna_password;
+	public void setQna_pid(String qna_pid) {
+		this.qna_pid = qna_pid;
 	}
 	public String getCustomer_name() {
 		return customer_name;

@@ -15,9 +15,9 @@
 					
 
 					insert into web_qna (qna_id, customer_email, qna_title,
-				qna_content, qna_root, qna_step, qna_indent)
+						qna_content, qna_root, qna_step, qna_indent, qna_pid)
 					values ( seq_web_qna.nextval, #{customer_email}, #{qna_title}, #{qna_content}
-				, #{qna_root}, #{qna_step}+1, #{qna_indent}+1);
+				, #{qna_root}, #{qna_step}+1, #{qna_indent}+1, #{qna_pid});
 			end;
 	
 		</insert>
@@ -99,9 +99,9 @@
 	<!-- qna 신규 글 등록 -->
 	<insert id="homeInsert">
 		insert into web_qna (qna_id, customer_email, qna_title,
-			qna_content, qna_root, qna_attribute)
+			qna_content, qna_root, qna_attribute, qna_pid)
 		values ( seq_web_qna.nextval, #{customer_email}, #{qna_title}, #{qna_content}
-			, seq_web_qna.currval, #{qna_attribute})
+			, seq_web_qna.currval, #{qna_attribute}, #{qna_pid})
 	</insert>
 	
 	<!-- qna 게시글 내용 수정 -->
@@ -171,31 +171,10 @@
 		</if>
 	</sql>
 
-   <!-- 고객과 점주일 경우 페이징 처리 된 qna 글 목록 조회 -->   
-   <select id="homeMemberQnaList" resultType="homeQna.QnaVO">
-   		select qna_root from web_qna where customer_email = #{customer_email}
-   </select>
-   
-   <select id="homeMemberQnaReplyList" resultType="homeQna.QnaVO">
-   		
-   		<foreach collection="list" item="item" separator="union all">
-   			select c.customer_name, q.* 
-   			from customer c, web_qna q
-   			where c.customer_email = q.customer_email
-   			and qna_root = #{item.qna_root}
-   		</foreach>
-   	
-   </select>
-   
-   <!-- 고객과 점주일 경우 qna 수 조회 -->
+	<!-- 고객과 점주일 경우 qna 수 조회 -->
 	<select id="homeMembertotalList" resultType="integer">
 
-		select count(*) from(
-		<foreach collection="rootList" item="item" separator="union all">
-			select *
- 			from web_qna 
- 			where qna_root = #{item.qna_root}
-		</foreach>)
+		select count(*) from web_qna where qna_pid = #{qna_pid}
 		
 	</select>
 
@@ -204,13 +183,16 @@
       select *
          from (select rownum no, w.*, ( select customer_name from customer c where c.customer_email = w.customer_email ) customer_name 
                from ( 
-               <foreach collection="rootList" item="item" separator="union all">
                   select *
                    from web_qna 
-                   where qna_root = #{item.qna_root}
-               </foreach> ) w 
-            )
+                   where qna_pid = #{qna_pid}
+               	order by qna_root, qna_step desc) w 
+            order by no desc)
          where no between #{page.beginList} and #{page.endList}
-         order by qna_root, qna_indent
+        
+   </select>
+   
+   <select id="homeMemberQnaList" resultType="homeQna.QnaVO">
+   		select * from web_qna where customer_email = #{customer_email}
    </select>
 </mapper>

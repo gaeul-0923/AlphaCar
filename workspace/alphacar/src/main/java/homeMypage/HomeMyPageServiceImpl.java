@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import member.WebMemberVO;
+import security.CustomUserDetails;
 
 @Service
 public class HomeMyPageServiceImpl implements HomeMyPageService {
@@ -13,7 +14,7 @@ public class HomeMyPageServiceImpl implements HomeMyPageService {
 	@Autowired private HomeMyPageDAO dao;
 
 	@Override
-	public int home_member_update(WebMemberVO vo) {
+	public int home_member_update(CustomUserDetails vo) {
 		return dao.home_member_update(vo);
 	}
 
@@ -56,7 +57,7 @@ public class HomeMyPageServiceImpl implements HomeMyPageService {
 
 
 	@Override
-	public WebMemberVO home_member_select(String customer_email) {
+	public CustomUserDetails home_member_select(String customer_email) {
 		return dao.home_member_select(customer_email);
 	}
 
@@ -109,13 +110,13 @@ public class HomeMyPageServiceImpl implements HomeMyPageService {
     }
 
 	@Override
-	public int member_update(WebMemberVO vo) {
+	public int member_update(CustomUserDetails vo) {
 		// TODO Auto-generated method stub
 		return dao.member_update(vo);
 	}
 
 	@Override
-	public int home_social_update(WebMemberVO vo) {
+	public int home_social_update(CustomUserDetails vo) {
 		// TODO Auto-generated method stub
 		return dao.home_social_update(vo);
 	}
