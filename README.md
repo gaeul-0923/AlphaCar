@@ -33,9 +33,9 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
 -마이페이지</br></br>
 ![20211227_222903](https://user-images.githubusercontent.com/90816804/147479046-84c5e169-1ba2-47c4-a849-40cb70498678.jpg)
 -데이터시각화</br></br>
-![20211227_225952](https://user-images.githubusercontent.com/90816804/147479171-aed8828b-a952-4433-8dc0-0a7027538f78.jpg)
--페이징처리 된 게시판</br></br>
-![20211227_220839](https://user-images.githubusercontent.com/90816804/147479226-c2cfeb6d-0d4d-4789-918a-5c83b627d1e1.jpg)
+![20211229_122634](https://user-images.githubusercontent.com/90816804/147624694-a67608ce-2936-4361-9eef-b2d4d97ae755.jpg)
+-페이징처리 된 게시판(계층형 구조)</br></br>
+![20211229_122634](https://user-images.githubusercontent.com/90816804/147624632-e0b047f3-16ae-4ebe-bc5b-b76a8952282d.jpg)
 -내 가게 정보</br></br>
 
 ## 사용 Skills
