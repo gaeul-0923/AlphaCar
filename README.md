@@ -38,3 +38,51 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
 ![20211227_220839](https://user-images.githubusercontent.com/90816804/147479226-c2cfeb6d-0d4d-4789-918a-5c83b627d1e1.jpg)
 -내 가게 정보</br></br>
 
+## 사용 Skills
+1. spring security 를 이용한 로그인 구현 [[소스코드]](https://github.com/holic4570/AlphaCar/tree/main/workspace/alphacar/src/main/java/security)
+  1. `AuthenticationProvider`인터페이스를 상속받은 CustomAuthenticationProvider 클래스에서 사용자가 입력한 정보와 DB정보가 같은지 비교해 준다.
+
+        - 인증에 성공하면 인증된 Authentication 객체를 생성하여 리턴
+        - matches 매소드를 이용하여 암호화 된 비밀번호를 비교
+
+        ```java
+       public class CustomAuthenticationProvider implements AuthenticationProvider{
+        @Autowired
+          private UserDetailsService userDeSer;
+
+        @Autowired 
+        private BCryptPasswordEncoder cryptEncoder;
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+          String cus = (String) authentication.getPrincipal();
+              String password = (String) authentication.getCredentials();
+
+              CustomUserDetails user = (CustomUserDetails) userDeSer.loadUserByUsername(cus);
+
+              if(!user.isEnabled()) {
+                throw new BadCredentialsException(cus);
+              }
+
+              Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) user.getAuthorities();
+
+          if(!cryptEncoder.matches(password, user.getPassword())) {
+            //log.debug("matchPassword :::::::: false!");
+            throw new BadCredentialsException(cus);
+          }
+
+              return new UsernamePasswordAuthenticationToken(cus, password, authorities);
+
+
+        }
+
+        @Override
+        public boolean supports(Class<?> authentication) {
+          // TODO Auto-generated method stub
+          return true;
+        }
+
+      }
+
+        ```
