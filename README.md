@@ -166,7 +166,114 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
 
       }
       </br>
-   1-3. 자동로그인 라디오버튼을 클릭하고 로그인 할 때 remember-me 쿠키를 물려주고 로그아웃 시 쿠키 삭제
+   1-3. 자동로그인 라디오버튼을 클릭하고 로그인 할 때 remember-me 쿠키를 물려주고 로그아웃 시 쿠키 삭제</br>
+      <beans 
+        xmlns="http://www.springframework.org/schema/beans" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:security="http://www.springframework.org/schema/security" 
+        xsi:schemaLocation="http://www.springframework.org/schema/security 
+        http://www.springframework.org/schema/security/spring-security.xsd 
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd"> 
+
+        <security:http pattern="/resources/**" security="none"/>
+        <security:http pattern="/resources/pictures/" security="none"/>
+        <security:http pattern="/**/*.js" security="none"/>
+        <security:http pattern="/**/*.css" security="none"/>
+        <security:http pattern="/img/**" security="none"/>		
+        <security:http pattern="/ioTCarWash" security="none"/>		
+        <security:http pattern="/**/*.an" security="none"/>		
+        <security:http pattern="/homeStoreRegister.mps" security="none"/>		
+        <security:http pattern="board/comment/update" security="none"/>	
+        <security:http pattern="board/comment/list/*" security="none"/>	
+        <security:http pattern="board/comment/list/" security="none"/>	
+
+
+
+
+        <security:http auto-config="true" use-expressions="true"> 
+          <security:csrf disabled="true"/>
+          <security:intercept-url pattern="/" access="permitAll"/>
+          <security:intercept-url pattern="/homeLogin" access="permitAll"/>
+          <security:intercept-url pattern="/**/*.ho" access="permitAll"/>
+          <security:intercept-url pattern="/**/*.no" access="permitAll"/>
+          <security:intercept-url pattern="/**/*.wa" access="permitAll"/>
+          <security:intercept-url pattern="/**/*.se" access="permitAll"/>
+          <security:intercept-url pattern="/**/*.mp" access="permitAll"/>
+
+      <!-- 		<security:intercept-url pattern="/**/*.mp" access="hasAnyRole('ROLE_ALPHACHR, ROLE_ADMIN, ROLE_CUSTOMER')"/> -->
+          <security:intercept-url pattern="/**/*.qn" access="isAuthenticated()" />
+          <security:intercept-url pattern="/**/*.mps" access="isAuthenticated()" />
+          <security:intercept-url pattern="/**/*.chat" access="isAuthenticated()" />
+          <security:intercept-url pattern="/**/*.mpa" access="hasRole('ROLE_ALPHACHR')" />
+          <security:intercept-url pattern="/**/*.noa" access="hasRole('ROLE_ALPHACHR')" />
+          <security:intercept-url pattern="/**/*.qna" access="hasRole('ROLE_ALPHACHR')" />
+          <security:intercept-url pattern="/**/*.sea" access="hasRole('ROLE_ALPHACHR')" />
+          <security:intercept-url pattern="/**/*.cha" access="hasRole('ROLE_ADMIN')" />
+
+
+          <!-- 로그인 설정 -->
+          <security:form-login
+                username-parameter="customer_email"
+                password-parameter="customer_pw"
+                login-processing-url="/webLogin.ho"
+                login-page="/homeLogin"
+                authentication-failure-handler-ref="loginFailureHandler"
+                authentication-success-handler-ref="loginSuccessHandler"
+              />	
+
+          <security:remember-me 
+                key="uniqueAndSecret" 
+                token-validity-seconds="60000"
+                authentication-success-handler-ref="loginSuccessHandler"/>
+
+          <!-- 로그아웃 설정 -->
+          <security:logout 
+            logout-url="/homelogout.ho"
+            invalidate-session="true"
+            logout-success-url="/"
+            delete-cookies="JSESSIONID, remember-me"
+            />
+
+          <security:session-management>
+                <security:concurrency-control
+                  max-sessions="5"
+                  error-if-maximum-exceeded="true"
+                />
+          </security:session-management>
+
+          <!-- 권한이 없어서 금지된 URI 접속할 때 보여줄 페이지(403 에러 페이지 대체) -->
+          <security:access-denied-handler error-page="/no_permission" />
+
+        </security:http> 
+
+
+        <security:authentication-manager>
+            <security:authentication-provider ref="userAuthProvider">
+            </security:authentication-provider>
+            <security:authentication-provider user-service-ref="userService">
+            <security:password-encoder ref="bcryptPasswordEncoder"/>
+
+          </security:authentication-provider>
+        </security:authentication-manager>
+
+        <bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
+        <bean id="userAuthProvider" class="security.CustomAuthenticationProvider"/>
+        <bean id="userService" class="security.CustomUserDetailsService"/>
+
+        <bean id="loginFailureHandler" class="security.LoginFailureHandler">
+          <property name="loginidname" value="customer_email"/>
+          <property name="loginpwdname" value="customer_pw"/>
+          <property name="errormsgname" value="ERRORMSG"/>
+          <property name="defaultFailureUrl" value="/homeLogin"/>
+
+        </bean>
+        <bean id="loginSuccessHandler" class="security.LoginSuccessHandler">
+          <property name="loginidname" value="customer_email"/>
+          <property name="defaultUrl" value="/"/>
+      </bean>
+     </beans>
+</br>
 2. summernote API를 이용한 게시판 구현(1:1문의, 자주묻는 ) </br>
    controller : [[소스코드]](https://github.com/holic4570/AlphaCar/blob/main/workspace/alphacar/src/main/java/com/hanul/alphacar/HomeMyPageController.java)</br>
    jsp : [[소스코드]](https://github.com/holic4570/AlphaCar/blob/main/workspace/alphacar/src/main/webapp/WEB-INF/views/mypage/member_contact.jsp)</br>
