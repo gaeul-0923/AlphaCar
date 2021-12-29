@@ -801,63 +801,65 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
 
       }
       ```
-   -mapper(pl/sql 문 이용)</br>
-        ```
-      	<!-- 신규 가게 등록 -->
-        <insert id="company_register">
-          DECLARE
-            V_STORE_NUM number ;
-            V_SENSOR number;
-            V_MAX_ID number;
-          BEGIN
-
-          SELECT NVL(MAX(FILE_ID),0)  INTO  V_MAX_ID from store_file;
-          SELECT SEQ_STORE.nextval  INTO  V_STORE_NUM from DUAL;
-          SELECT NVL(MAX(SENSOR_ID),0)  INTO  V_SENSOR from SENSOR;
-          INSERT ALL
-            into store (store_number, customer_email, store_name, store_post, store_addr, store_detail_addr, store_tel, 
-              store_time, store_dayoff, introduce, inventory, store_price, store_master_name, store_registration_number)
-            values (V_STORE_NUM, #{customer_email, jdbcType=VARCHAR}, #{store_name, jdbcType=VARCHAR}, 
-              #{store_post, jdbcType=VARCHAR}, #{store_addr, jdbcType=VARCHAR}, #{store_detail_addr, jdbcType=VARCHAR}, 
-              #{store_tel, jdbcType=VARCHAR}, #{store_time, jdbcType=VARCHAR}, 
-              #{store_dayoff, jdbcType=VARCHAR}, #{introduce, jdbcType=VARCHAR}, 
-              #{inventory, jdbcType=VARCHAR}, #{store_price, jdbcType=VARCHAR}, 
-              #{store_master_name, jdbcType=VARCHAR}, #{store_registration_number, jdbcType=VARCHAR})
-
-            SELECT 1
-            FROM dual ;
-
-
-
-            <foreach collection="now_state" item="item" index="i" >
-              SELECT V_SENSOR + 1 INTO V_SENSOR FROM dual ;
-
-              INSERT INTO SENSOR (SENSOR_ID, LATITUDE, LONGITUDE, STORE_NUMBER, sensor_number)
-              VALUES (V_SENSOR  , 1 , 2 ,V_STORE_NUM, #{i, jdbcType=VARCHAR}+1 );
-              INSERT INTO STATE(INVENTORY_NUMBER, STORE_NUMBER, SENSOR_ID, NOW_STATE, CREATE_DATE, CHANGE_DATE)
-              VALUES (V_SENSOR  , V_STORE_NUM , V_SENSOR , #{item, jdbcType=VARCHAR}, sysdate, sysdate );
-
-
-              COMMIT;
-            </foreach>
-
-          END;
-
-        </insert>
-
-        <!-- 가게 이미지 저장 -->
-        <insert id="companyImg_insert">
-          DECLARE
-            V_MAX_ID number;
-          BEGIN
+   </br>  
+-mapper(pl/sql 문 이용)</br>
+   
+          ```
+          <!-- 신규 가게 등록 -->
+          <insert id="company_register">
+            DECLARE
+              V_STORE_NUM number ;
+              V_SENSOR number;
+              V_MAX_ID number;
+            BEGIN
 
             SELECT NVL(MAX(FILE_ID),0)  INTO  V_MAX_ID from store_file;
+            SELECT SEQ_STORE.nextval  INTO  V_STORE_NUM from DUAL;
+            SELECT NVL(MAX(SENSOR_ID),0)  INTO  V_SENSOR from SENSOR;
+            INSERT ALL
+              into store (store_number, customer_email, store_name, store_post, store_addr, store_detail_addr, store_tel, 
+                store_time, store_dayoff, introduce, inventory, store_price, store_master_name, store_registration_number)
+              values (V_STORE_NUM, #{customer_email, jdbcType=VARCHAR}, #{store_name, jdbcType=VARCHAR}, 
+                #{store_post, jdbcType=VARCHAR}, #{store_addr, jdbcType=VARCHAR}, #{store_detail_addr, jdbcType=VARCHAR}, 
+                #{store_tel, jdbcType=VARCHAR}, #{store_time, jdbcType=VARCHAR}, 
+                #{store_dayoff, jdbcType=VARCHAR}, #{introduce, jdbcType=VARCHAR}, 
+                #{inventory, jdbcType=VARCHAR}, #{store_price, jdbcType=VARCHAR}, 
+                #{store_master_name, jdbcType=VARCHAR}, #{store_registration_number, jdbcType=VARCHAR})
 
-            insert into store_file (file_id, store_number, imgpath, imgname, rank)
-            values (V_MAX_ID+1, SEQ_STORE.currval, #{imgpath, jdbcType=VARCHAR}, #{imgname, jdbcType=VARCHAR}, #{rank, jdbcType=VARCHAR});
-          end;
-        </insert>
-      ```
+              SELECT 1
+              FROM dual ;
+
+
+
+              <foreach collection="now_state" item="item" index="i" >
+                SELECT V_SENSOR + 1 INTO V_SENSOR FROM dual ;
+
+                INSERT INTO SENSOR (SENSOR_ID, LATITUDE, LONGITUDE, STORE_NUMBER, sensor_number)
+                VALUES (V_SENSOR  , 1 , 2 ,V_STORE_NUM, #{i, jdbcType=VARCHAR}+1 );
+                INSERT INTO STATE(INVENTORY_NUMBER, STORE_NUMBER, SENSOR_ID, NOW_STATE, CREATE_DATE, CHANGE_DATE)
+                VALUES (V_SENSOR  , V_STORE_NUM , V_SENSOR , #{item, jdbcType=VARCHAR}, sysdate, sysdate );
+
+
+                COMMIT;
+              </foreach>
+
+            END;
+
+          </insert>
+
+          <!-- 가게 이미지 저장 -->
+          <insert id="companyImg_insert">
+            DECLARE
+              V_MAX_ID number;
+            BEGIN
+
+              SELECT NVL(MAX(FILE_ID),0)  INTO  V_MAX_ID from store_file;
+
+              insert into store_file (file_id, store_number, imgpath, imgname, rank)
+              values (V_MAX_ID+1, SEQ_STORE.currval, #{imgpath, jdbcType=VARCHAR}, #{imgname, jdbcType=VARCHAR}, #{rank, jdbcType=VARCHAR});
+            end;
+          </insert>
+          ```
 5. 회원가입 [[소스코드]](https://github.com/holic4570/AlphaCar/blob/main/workspace/alphacar/src/main/java/com/hanul/alphacar/HomeMemberController.java)</br>
   
 
