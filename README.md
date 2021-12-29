@@ -168,51 +168,41 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
       </br>
 2. summernote API를 이용한 게시판 구현 </br>
    controller : [[소스코드]](https://github.com/holic4570/AlphaCar/blob/main/workspace/alphacar/src/main/java/com/hanul/alphacar/HomeMyPageController.java)</br>
-   jspr : [[소스코드]](https://github.com/holic4570/AlphaCar/blob/main/workspace/alphacar/src/main/webapp/WEB-INF/views/mypage/member_contact.jsp)</br>
-    -controller
-    
-    @RequestMapping("/memberContact.mp")
-    public String memberContact(HttpSession session, Model model, 
-        @RequestParam (defaultValue = "1") int curPage,
-        String search, String keyword, QnaVO vo, CustomUserDetails cus) {
+   jsp : [[소스코드]](https://github.com/holic4570/AlphaCar/blob/main/workspace/alphacar/src/main/webapp/WEB-INF/views/mypage/member_contact.jsp)</br>
+   
+    -controller</br>
+      ```
+      @RequestMapping("/memberContact.mp")
+      public String memberContact(HttpSession session, Model model, 
+          @RequestParam (defaultValue = "1") int curPage,
+          String search, String keyword, QnaVO vo, CustomUserDetails cus) {
 
-      page.setCurPage(curPage);
-      page.setSearch(search);
-      page.setKeyword(keyword);
-      //((WebMemberVO) session.getAttribute("loginInfo")).getCustomer_email() ;
+        page.setCurPage(curPage);
+        page.setSearch(search);
+        page.setKeyword(keyword);
+        //((WebMemberVO) session.getAttribute("loginInfo")).getCustomer_email() ;
 
-      //DB에서 공지글 목록을 조회한 후 목록화면에 출력
-  //		String customer_email = ((WebMemberVO) session.getAttribute("loginInfo")).getCustomer_email();
-      String customer_email = ((CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email();
+        //DB에서 공지글 목록을 조회한 후 목록화면에 출력
+    //		String customer_email = ((WebMemberVO) session.getAttribute("loginInfo")).getCustomer_email();
+        String customer_email = ((CustomUserDetails) session.getAttribute("loginInfo")).getCustomer_email();
 
-      List<QnaVO> qvo = service.member_qna_list(customer_email);
-      if (qvo.size() == 0) {
-        return "mypage/member_contact";
-      } else {
+        List<QnaVO> qvo = service.member_qna_list(customer_email);
+        if (qvo.size() == 0) {
+          return "mypage/member_contact";
+        } else {
 
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("qna_pid", qvo.get(0).getQna_pid());
-        map.put("page", page);
-        page = service.member_qna_list(map);
-        model.addAttribute("page", page);
+          HashMap<String, Object> map = new HashMap<String, Object>();
+          map.put("qna_pid", qvo.get(0).getQna_pid());
+          map.put("page", page);
+          page = service.member_qna_list(map);
+          model.addAttribute("page", page);
 
-        return "mypage/member_contact";
+          return "mypage/member_contact";
+        }
       }
-    }
-    
-    -jsp
-    <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-    <div class="mypage_image">
-        </div>
-        <div class="mypage_select">
-          <div class="mypage_userinfo">
-            <a href=""><p class="mypage_userinfo_select">마이페이지</p></a>
-
-          </div>
-        </div>
-      </nav>
+     ```
+    </br>
+    -jsp</br>
       <!-- 메인 시작 -->
       <main>
         <div id="page">
