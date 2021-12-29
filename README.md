@@ -83,7 +83,7 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
         }
       }
      </br>
-   1-2 로그인 성공 시 'LoginSuccessHandler' 클래스에서 어떤 URL로 Redirect 할 지 결정한다.
+   1-2. 로그인 성공 시 'LoginSuccessHandler' 클래스에서 어떤 URL로 Redirect 할 지 결정한다.
       public class LoginSuccessHandler implements AuthenticationSuccessHandler{
         @Autowired
         private UserService service;
@@ -165,3 +165,6 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
 
 
       }
+      </br>
+2. summernote API를 이용한 게시판 구현 [[소스코드]](https://github.com/holic4570/AlphaCar/blob/main/workspace/alphacar/src/main/java/com/hanul/alphacar/HomeMyPageController.java)</br>
+3. chart.js 를 이용한 데이터 시각화 [[소스코드]](https://github.com/holic4570/AlphaCar/blob/main/workspace/alphacar/src/main/java/com/hanul/alphacar/HomeMyPageController.java)</br>
