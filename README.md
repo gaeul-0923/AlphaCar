@@ -44,8 +44,7 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
 
         - 인증에 성공하면 인증된 Authentication 객체를 생성하여 리턴
         - matches 매소드를 이용하여 암호화 된 비밀번호를 비교
-
-        ```java
+        
        public class CustomAuthenticationProvider implements AuthenticationProvider{
         @Autowired
           private UserDetailsService userDeSer;
@@ -82,7 +81,87 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
           // TODO Auto-generated method stub
           return true;
         }
+      }
+     </br>
+   1-2 로그인 성공 시 'LoginSuccessHandler' 클래스에서 어떤 URL로 Redirect 할 지 결정한다.
+      public class LoginSuccessHandler implements AuthenticationSuccessHandler{
+        @Autowired
+        private UserService service;
+
+        private RequestCache requestCache = new HttpSessionRequestCache();
+        private RedirectStrategy redirectStratgy = new DefaultRedirectStrategy();
+
+        private String loginidname;
+          private String defaultUrl;
+
+
+
+        @Override
+        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
+
+          HttpSession session = null;
+          session = request.getSession(true);
+          Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+          String customer_email = auth.getName();
+          CustomUserDetails vo = service.member_login(customer_email);
+
+          session.setAttribute("loginInfo", vo);
+
+          //에러 세션 지우기
+          clearAuthenticationAttributes(request);
+
+          //Redirect URL 작업
+          resultRedirectStrategy(request, response, authentication);
+
+        }
+        protected void clearAuthenticationAttributes(HttpServletRequest request) {
+          HttpSession session = request.getSession(false);
+          if(session==null) return;
+          session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        }
+        protected void resultRedirectStrategy(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
+
+          SavedRequest savedRequest = requestCache.getRequest(request, response);
+
+          if(savedRequest!=null) {
+            //log.debug("권한이 필요한 페이지에 접근했을 경우");
+            useSessionUrl(request, response);
+          } else {
+            //log.debug("직접 로그인 url로 이동했을 경우");
+            useDefaultUrl(request, response);
+          }
+
+        }
+        protected void useSessionUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
+          SavedRequest savedRequest = requestCache.getRequest(request, response);
+          String targetUrl = savedRequest.getRedirectUrl();
+          redirectStratgy.sendRedirect(request, response, targetUrl);
+        }
+        protected void useDefaultUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
+          redirectStratgy.sendRedirect(request, response, defaultUrl);
+        }
+
+
+        public String getLoginidname() {
+          return loginidname;
+        }
+
+
+        public void setLoginidname(String loginidname) {
+          this.loginidname = loginidname;
+        }
+
+
+        public String getDefaultUrl() {
+          return defaultUrl;
+        }
+
+
+        public void setDefaultUrl(String defaultUrl) {
+          this.defaultUrl = defaultUrl;
+        }
+
 
       }
-
-        ```
