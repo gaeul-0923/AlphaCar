@@ -1,0 +1,20 @@
+package com.alphacar;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class HomeController {
+
+	// http://localhost:8080/ 으로 접속 시
+    @RequestMapping("/")
+    public String welcome() {
+        return "welcome";
+    }
+    
+    // http://localhost:8080/test 로 접속 시
+    @RequestMapping("/test")
+    public String test() {
+        return "test";
+    }    
+}

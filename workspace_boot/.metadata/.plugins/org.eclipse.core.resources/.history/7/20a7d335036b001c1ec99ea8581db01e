@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<definition name="layout" template="/WEB-INF/views/tiles/layout.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/include/header.jsp" />	
+		<put-attribute name="footer" value="/WEB-INF/views/include/footer.jsp" />	
+	</definition>
+
+	
+	<!-- views 폴더 하위에 위치한 파일의 경우 layout.jsp 형태를 상속받으며
+	     content에 들어갈 jsp 파일의 위치는 /WEB-INF/views/ 폴더 하위에 위치한 {1}.jsp 임 -->
+	
+ 	<definition name="*" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/index.jsp" />
+	</definition> 
+	
+	<definition name="error/*" template="/WEB-INF/views/tiles/default.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/error/{1}.jsp" />
+	</definition>
+	
+	<!-- views 폴더 하위에 */* 위치한 파일의 경우 layout.jsp 형태를 상속받으며
+	   content 에 들어갈 jsp 파일의 위치는 /WEB-INF/views/{1} 폴더 하위에 위치한 {2}.jsp 임 -->
+	<definition name="*/*" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+	
+	<definition name="member/login" template="/WEB-INF/views/tiles/default.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/member/login.jsp" />
+	</definition>
+	<definition name="member/join" template="/WEB-INF/views/tiles/default.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/member/join.jsp" />
+	</definition>
+	<definition name="chat/list" template="/WEB-INF/views/tiles/default.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/chat/list.jsp" />
+	</definition>
+	
+</tiles-definitions>

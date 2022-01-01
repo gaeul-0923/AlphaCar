@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 2 elements to &apos;jsp&apos;&#x0D;&#x0A;- Original project: &apos;demo&apos;&#x0D;&#x0A;- Destination element: &apos;jsp&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     test.jsp&#x0D;&#x0A;     welcome.jsp" description="Copy files" element1="src/main/webapp/WEB-INF/jsp/test.jsp" element2="src/main/webapp/WEB-INF/jsp/welcome.jsp" files="2" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1641041556050" target="/alphaCar_boot/src/main/webapp/WEB-INF/jsp" units="0" version="1.0"/>
+</session>
