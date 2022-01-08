@@ -10,29 +10,40 @@
 	
 		
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 1 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 2 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 3 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 4 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 5 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 6 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 7 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 8 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 9 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 10 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 11 and store_number = #{store_number}
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 		UNION ALL
 		select count(log) tt from state_log where in_out = 'I' and to_char(log, 'MM') = 12 and store_number = #{store_number}
-		
+		and to_char(log, 'yyyy') = to_char(sysdate, 'yyyy')
 	  
 	</select>
 	
