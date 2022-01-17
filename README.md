@@ -18,9 +18,10 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
 ## 개발 환경
 
 - 개발 언어 : Java, HTML, CSS, JavaScript, jQuery
-- 개발 환경 : Spring Framework
+- Framework/ Library : Spring Framework, Spring Security
 - DBMS : Oracle
 - 서버 : Apache Tomcat, MyBatis
+- IDE : Eclipse
 - etc : Notion, GitHub
 
 ## 화면
