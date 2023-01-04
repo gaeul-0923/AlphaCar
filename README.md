@@ -868,8 +868,4 @@ DB 설계, 웹 summernote API를 이용해 1:1 문의, 자주묻는 질문 게�
 
   - [전체 소스코드](https://github.com/holic4570/AlphaCar/tree/main/workspace/alphacar/src/main)
 
-# 스프링부트로 옮기기(2022.01.01 ~)
-
-## 수정 된 DB 설계도
-![db_update](https://user-images.githubusercontent.com/90816804/147851446-05d711d9-a847-4621-b00f-d9690a171741.png)
 
